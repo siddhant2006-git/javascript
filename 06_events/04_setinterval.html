@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>set interval</title>
+    <h1>hello my creaters</h1>
+
+    <button id="krish">stop</button>
+    <button id="kartikey">start</button>
+
+    <script>
+      const inter = function () {
+        document.querySelector("h1").innerHTML = "krish";
+      };
+      const set = setInterval(inter, 3000);
+      document.querySelector("#krish").addEventListener("click", function () {
+        clearInterval(set);
+
+        console.log("hello krish ");
+      });
+
+      const starts = function () {
+        document.querySelector("h1").innerHTML = "krish";
+      };
+
+      let interval2;
+
+      document
+        .querySelector("#kartikey")
+        .addEventListener("click", function () {
+          interval2 = setInterval(starts, 2000);
+          console.log("hello");
+        });
+    </script>
+  </head>
+  <body></body>
+</html>
