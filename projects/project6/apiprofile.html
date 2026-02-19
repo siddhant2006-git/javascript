@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      
+      const fetchProfile = async () => {
+
+        const res = await fetch("https://api.github.com/users/siddhant-2006")
+
+        return res.url;
+        
+      }
+
+      const url = fetchProfile().then(console.log).catch(console.error)
+      
+      console.log(url);
+      
+      
+    </script>
+  </body>
+</html>

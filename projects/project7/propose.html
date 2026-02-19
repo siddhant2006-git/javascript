@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GAME OF FEB</title>
+    <link rel="stylesheet" href="propose.css" />
+  </head>
+  <body>
+    <h1>GAME OF LOVE</h1>
+
+    <p class="VALIENTINE"><b> WILL YOU BE MY VALIENTINE NAME </b></p>
+    <a href="">
+      <img id="deafult_pic" src="siddhant.jpeg" />
+      <br /><br />
+      <img id="user_pic" src="download (1).jpeg" />
+    </a>
+
+    <label class="enjoy" placeholder="yourname ">
+      <input id="rose" class="enjoy" />
+      <button id="kisses">yes</button>
+      <button id="hug">no</button>
+    </label>
+  </body>
+
+  <script>
+    const labelclass = document.querySelector(".VALIENTINE");
+    const inputclass = document.querySelector(".kisses");
+    const inputid = document.querySelector("#rose");
+    const yes = document.getElementById("kisses");
+    const no = document.getElementById("hug");
+
+
+    
+
+    yes.addEventListener("click", () => {
+      labelclass.style.color = "red";
+      labelclass.innerText = `Yay ❤️ I love  you ${inputid.value || "my Valentine"}!`;
+
+      const yourname=inputid.value.toUpperCase().trim();
+      const image=document.getElementById("user_pic")
+
+      if(yourname==="SIDDHANT"){
+        image.src="download (1).jpeg";
+      }else{
+        image.src="siddhant.jpeg";
+      }
+
+    });
+    no.addEventListener("click", () => {
+      labelclass.style.color = "blue";
+      labelclass.innerText = `Oh no 💔 Maybe next time ${inputid.value || "dear"}!`;
+    });
+
+    
+  </script>
+</html>

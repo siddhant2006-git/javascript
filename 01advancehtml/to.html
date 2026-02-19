@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blinking Resume</title>
+
+    <style>
+      body {
+        background-color: #dffdba;
+        background-color: yellowgreen;
+        font-family: Arial, sans-serif;
+        padding: 40px;
+      }
+
+      .line {
+        font-size: 24px;
+        display: none; /* all hidden by default */
+        transition: opacity 0.5s ease-in-out;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="line">SIDDHANT BHATNAGAR</h1>
+    <h2 class="line">JUNIOR SOFTWARE DEVELOPER</h2>
+    <p class="line">📍 Durga Colony, Sambhal (UP)</p>
+    <p class="line">📞 73105544137</p>
+    <p class="line">📧 siddhantbhatnagar11@gmail.com</p>
+
+    <h3 class="line">SKILLS</h3>
+    <p class="line">HTML • CSS • JavaScript</p>
+    <p class="line">Frontend Developer</p>
+    <p class="line">Python • C • Machine Learning</p>
+
+    <h3 class="line">EDUCATION</h3>
+    <p class="line">12th – PCM + Computer Science</p>
+    <p class="line">10th – Saraswati Vidya Mandir (CBSE)</p>
+
+    <h3 class="line">ACHIEVEMENT</h3>
+    <p class="line">Participated in Indian Hackathon</p>
+
+    <script>
+      const lines = document.querySelectorAll(".line");
+      let index = 0;
+
+      function showNextLine() {
+        // Hide all lines
+        lines.forEach((line) => (line.style.display = "display"));
+
+        // Show only the active line
+        lines[index].style.display = "block";
+
+        // Move to next line
+        index++;
+        if (index >= lines.length) index = 0;
+      }
+
+      // Run every 1 second
+      setInterval(showNextLine, 1000);
+
+      // Show the first line immediately
+      showNextLine();
+    </script>
+  </body>
+</html>

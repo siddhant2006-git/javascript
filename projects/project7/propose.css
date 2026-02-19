@@ -1,0 +1,35 @@
+body {
+  background-color: red;
+  color: brown;
+}
+
+button {
+  background-color: red;
+  color:white;
+  font: size 20px;
+  border-radius: 15px;
+  padding: 10px;
+  margin:10px;
+  cursor: pointer
+
+}
+
+.VALIENTINE{
+  font-size: 25px;
+  font-weight: bold;
+
+}
+
+img{
+  width: 300px;
+  height: 330px;
+
+}
+
+#user_pic{
+  width: 300px;
+  height:250px;
+  align-items:right;
+  display: none;
+}
+

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>event manage</title>
+  </head>
+  <body>
+    <div>
+      <ul id="images">
+        <li>
+          <img
+            width="200px"
+            id="krishna"
+            src="https://cdn.dollsofindia.com/images/p/krishna-pictures/radha-krishna-poster-SK02_l.jpg"
+          />
+        </li>
+        <li>
+          <img
+            width="200px"
+            id="radha"
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaq3UkT7p9cZMo3bsLfbC3cHPwGU9GID507Q&s"
+          />
+        </li>
+        <li>
+          <img
+            width="200px"
+            id="rani"
+            src="https://www.radhekrishn.com/images/main-inner.jpg"
+          />
+        </li>
+        <a href="https://www.google.com/" id="google"> google</a>
+
+        <!-- type , timestamp, deafultprevent, target ,toelement, srcelement, currenttarget-->
+        <!--inteview lelated_ cleintx ,cleinty, screenx,screenY-->
+        <!--alterkey, ctrlkey, shiftkey,keycode-->
+      </ul>
+    </div>
+  </body>
+  <script>
+    //  document.getElementById('images').addEventListener('click', function(e){
+    //         console.log("click the inside the ul")
+    //     },false)
+
+    //  document.getElementById('krishna').addEventListener('click', function(e){
+    //         console.log("krishna clicking")
+    //         e.stopPropagation()
+    //     },false)
+
+    //     document.getElementById('google').addEventListener('click',function(e){
+    //         console.log("google is clicked");
+    //         e.defaultPrevented();
+
+    //     },false)
+
+    document.querySelector("#images").addEventListener("click", function (e) {
+      console.log(e.target.tagName);
+      if (e.target.tagName === "img") {
+        console.log(e.target.id);
+        let remove = e.target.tagName;
+      }
+      let removeIt = e.target.parentNode;
+      // removeIt.remove()
+
+      removeIt.parentNode.removeChild(removeIt);
+    });
+  </script>
+</html>

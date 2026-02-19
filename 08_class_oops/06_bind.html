@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>react</title>
+  </head>
+  <body>
+    <button>button clicked</button>
+  </body>
+
+  <script>
+  class  react{
+      constructor(){
+        this.libary="react"
+        this.server="https:\\localhost:300"
+
+        // bind method- can be use to set the value of current poistion of the function (this keyword)
+
+        // requirment
+        document.querySelector("button").addEventListener("click",this.handelClick.bind(this))
+    
+      }
+
+      handelClick(){
+        console.log("clicked")
+        console.log(this);
+        
+      }
+    }
+
+    const app=new react();
+
+  
+
+
+    
+  
+  </script>
+</html>
