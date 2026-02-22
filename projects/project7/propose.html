@@ -11,9 +11,10 @@
 
     <p class="VALIENTINE"><b> WILL YOU BE MY VALIENTINE NAME </b></p>
     <a >
-      <img id="deafult_pic" src="siddhant.jpeg" />
+      <img id="defult_pic" src="siddhant.jpeg" />
       <br /><br />
       <img id="user_pic" src="download (1).jpeg" />
+      <img id="user2_pic" src="bhatnagar.jpg">
     </a>
 
     <label class="enjoy" placeholder="yourname ">
@@ -29,22 +30,31 @@
     const inputid = document.querySelector("#rose");
     const yes = document.getElementById("kisses");
     const no = document.getElementById("hug");
+    const image_2=document.getElementById("user2_pic")
 
 
     
 
     yes.addEventListener("click", () => {
-      labelclass.style.color = "green";
+
+      // to trim()- to delete the space in the input text 
+      // toLowerCase- to lower letters in input text 
+
+      let values=inputid.value.trim().toLowerCase()
+
+      if(values==="siddhant"){
+          document.getElementById("user_pic").style.display="block"
+            labelclass.style.color = "green";
       labelclass.innerText = `Yay ❤️ I love you ${inputid.value || "my Valentine"}!`;
+      // document.getElementById("user_pic").
 
-      // const yourname=inputid.value.toUpperCase().trim();
-      // const image=document.getElementById("user_pic")
-
-      // if(yourname==="SIDDHANT"){
-      //   image.src="download (1).jpeg";
-      // }else{
-      //   image.src="siddhant.jpeg";
-      // }
+      }else if(values==="atharv"){image_2.style.display="block"
+        labelclass.style.color = "green";
+      labelclass.innerText = `Yay ❤️ I love you ${inputid.value || "my Valentine"}!`;
+      // document.getElementById("user_pic").
+      }else{
+        alert("please enter the correct name ")
+      }
 
     });
     no.addEventListener("click", () => {
