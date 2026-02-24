@@ -15,6 +15,7 @@
       <br /><br />
       <img id="user_pic" src="download (1).jpeg" />
       <img id="user2_pic" src="bhatnagar.jpg">
+      <img id="user3_pic" src="12345.jpg">
     </a>
 
     <label class="enjoy" placeholder="yourname ">
@@ -31,6 +32,8 @@
     const yes = document.getElementById("kisses");
     const no = document.getElementById("hug");
     const image_2=document.getElementById("user2_pic")
+    const image_3=document.getElementById("user3_pic")
+
 
 
     
@@ -51,6 +54,11 @@
       }else if(values==="atharv"){image_2.style.display="block"
         labelclass.style.color = "green";
       labelclass.innerText = `Yay ❤️ I love you ${inputid.value || "my Valentine"}!`;
+
+    }else if(values==="anuskha"){image_3.style.display="block"
+      labelclass.style.color = "green";
+      labelclass.innerText = `Yay ❤️ I love you ${inputid.value || "my Valentine"}!`;
+    
       // document.getElementById("user_pic").
       }else{
         alert("please enter the correct name ")
