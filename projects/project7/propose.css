@@ -36,3 +36,9 @@ img{
 #user2_pic{
   display:none;
 }
+
+#user3_pic{
+  display: none;
+  align-items: right;
+
+}
