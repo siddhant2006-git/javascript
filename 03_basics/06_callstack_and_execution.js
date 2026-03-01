@@ -1,6 +1,6 @@
 // javascript excution context
-//global execution context
-//function exexcution
+// global execution context
+// function exexcution
 // eval excution
 
 // javascript is single threaded language
