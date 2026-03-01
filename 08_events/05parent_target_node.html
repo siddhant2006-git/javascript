@@ -41,6 +41,9 @@
         <!--inteview lelated_ cleintx ,cleinty, screenx,screenY-->
         <!--alterkey, ctrlkey, shiftkey,keycode-->
       </ul>
+
+
+
     </div>
   </body>
   <script>
@@ -56,18 +59,30 @@
     // jQuery-on 
 
 
-
-
     //  document.getElementById('krishna').addEventListener('click', function(e){
     //         console.log("krishna clicking")
     //         e.stopPropagation()
     //     },false)
 
-    //     document.getElementById('google').addEventListener('click',function(e){
-    //         console.log("google is clicked");
-    //         e.defaultPrevented();
+        // document.getElementById('google').addEventListener('click',function(e){
+        //     console.log("google is clicked");
+        //     e.preventDeafult();
 
     //     },false)
+
+
+
+    // event propogation- event bubbling and event capturing
+
+    // event bubbling - to print the top to bottom means 
+    // example- to print child and then print father
+
+    // stoppropogation()-donot bubble the top of the element 
+
+    //preventDeafult-is use to the stop the deafult behivour of the event 
+
+
+    // target event - is use to exactly target to the event [click, switch the button ]
 
     document.querySelector("#images").addEventListener("click", function (e) {
       console.log(e.target.tagName);
@@ -76,7 +91,7 @@
         let remove = e.target.tagName;
       }
       let removeIt = e.target.parentNode;
-      // removeIt.remove()
+      // removeIt.remove() the pic 
 
       removeIt.parentNode.removeChild(removeIt);
     });

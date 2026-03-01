@@ -2,12 +2,12 @@
 
 class car{
   start() {
-    this.#engineStart();
+    this.engineStart();
     console.log("car start")
 
   }
 
-  #engineStart() {
+  engineStart() {
     console.log("engine is running intially ")
   
   }
@@ -24,7 +24,7 @@ class balance {
 
 
   Deposite(amount) {
-    this.#balance += amount
+    this.balance += amount
   }
 
   getbalance() {

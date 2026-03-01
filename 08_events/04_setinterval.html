@@ -12,7 +12,10 @@
     <script>
       const inter = function () {
         document.querySelector("h1").innerHTML = "krish";
+        // console.log(inter,Date.now())// print date 
       };
+
+      // set interval-infinite many time can run (printing)
       const set = setInterval(inter, 3000);
       document.querySelector("#krish").addEventListener("click", function () {
         clearInterval(set);
