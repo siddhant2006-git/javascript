@@ -1,0 +1,103 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  background-color: rgb(240, 240, 240);
+}
+
+/* Main container */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+/* Input section */
+.input-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 500px;
+}
+
+/* Input field */
+.input-container input[type="text"] {
+  width: 70%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+}
+
+/* Button */
+.input-container button {
+  width: 30%;
+  padding: 10px;
+  background-color: red;
+  color: white;
+  font-weight: 700;
+  margin-left: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+}
+
+.input-container button:hover {
+  background-color: #0056b3;
+}
+
+/* List */
+ul {
+  width: 100%;
+  max-width: 450px;
+  margin-top: 20px;
+}
+
+/* List item */
+ul li {
+  padding: 6px 12px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  list-style-type: none;
+  cursor: pointer;
+  margin-bottom: 12px;
+  border: 1px solid #ccc;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Task text */
+ul li p {
+  flex-grow: 1;
+  padding: 2px;
+}
+
+/* Delete button */
+.btn {
+  border: none;
+  outline: none;
+  font-size: 16px;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.deletebtn{
+  color:red ;
+  background-color: none;
+
+}
+
+.editbtn{
+  color:blue ;
+  background-color: none;
+
+}
