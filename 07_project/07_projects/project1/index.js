@@ -39,4 +39,16 @@ const addtodo = () => {
   todolist.appendChild(li);
 };
 
+// target- it is click event formation 
+const updatetodo = (e) => {
+  // console.log(e.target.innerText)
+  if (e.target ==="remove") {
+    todolist.removeChild(e.target.parentElement);
+
+  }
+  
+  
+}
+
 addbtn.addEventListener("click", addtodo);
+todolist.addEventListener("click", updatetodo)
