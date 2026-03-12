@@ -13,6 +13,12 @@ const addtodo = () => {
     alert("enter the value greater than 0 length ");
   }
 
+  if (addbtn.value == "edit") {
+    edittodo.target.previousElementSibling.innerHTML = inputText;
+    addbtn.value = "Add";
+    inputbox.value = "";
+  }
+
   // create the add button
   const li = document.createElement("li");
   const p = document.createElement("p");
@@ -39,16 +45,24 @@ const addtodo = () => {
   todolist.appendChild(li);
 };
 
-// target- it is click event formation 
+let edittodo = null;
+
+// target- it is click event formation
 const updatetodo = (e) => {
   // console.log(e.target.innerText)
-  if (e.target ==="remove") {
+  if (e.target.innerText === "remove") {
     todolist.removeChild(e.target.parentElement);
+  }
+  if ((e.target.innerHTML == "edit")) {
+    inputbox.value = e.target.previousElementSibling.innerHTML;
+    // focus-place to the cursor in the input box
+
+    inputbox.focus();
+    addbtn.innerText = "edit";
+    edittodo = e;
 
   }
-  
-  
-}
+};
 
 addbtn.addEventListener("click", addtodo);
-todolist.addEventListener("click", updatetodo)
+todolist.addEventListener("click", updatetodo);
