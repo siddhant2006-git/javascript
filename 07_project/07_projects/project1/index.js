@@ -66,3 +66,5 @@ const updatetodo = (e) => {
 
 addbtn.addEventListener("click", addtodo);
 todolist.addEventListener("click", updatetodo);
+
+
