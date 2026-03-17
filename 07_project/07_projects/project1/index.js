@@ -2,69 +2,97 @@ const inputbox = document.getElementById("inputbox");
 const addbtn = document.getElementById("addbtn");
 const todolist = document.getElementById("todolist");
 
-// javascript cannot be return the single element
-
-// it return an html collection
+// Note: getElementById returns a single element, not a collection.
+let edittodo = null;
 
 const addtodo = () => {
-  // trim()- can delete the space in the input
   const inputText = inputbox.value.trim();
   if (inputText.length <= 0) {
-    alert("enter the value greater than 0 length ");
+    alert("Enter a value with length greater than 0");
+    return; // Prevent adding empty todos
   }
 
-  if (addbtn.value == "edit") {
-    edittodo.target.previousElementSibling.innerHTML = inputText;
-    addbtn.value = "Add";
+  if (addbtn.innerText === "edit") {
+    // Use innerText for button text
+    edittodo.querySelector("p").innerHTML = inputText;
+    addbtn.innerText = "Add";
     inputbox.value = "";
+    edittodo = null; // Reset after edit
+    return; // Exit after editing
   }
 
-  // create the add button
+  // Create the li element
   const li = document.createElement("li");
   const p = document.createElement("p");
   p.innerHTML = inputText;
   li.appendChild(p);
   inputbox.value = "";
 
-  // delete the button
-
+  // Delete button
   const deletebtn = document.createElement("button");
   deletebtn.innerText = "remove";
   deletebtn.classList.add("btn", "deletebtn");
   li.appendChild(deletebtn);
 
-  // edit button
+  inputbox.value = "";
 
-  // classlist-is property create the class in html
-
+  // Edit button
   const editbtn = document.createElement("button");
   editbtn.innerText = "edit";
   editbtn.classList.add("btn", "editbtn");
   li.appendChild(editbtn);
 
   todolist.appendChild(li);
+  saveLocaltodos(inputText);
 };
 
-let edittodo = null;
-
-// target- it is click event formation
 const updatetodo = (e) => {
-  // console.log(e.target.innerText)
   if (e.target.innerText === "remove") {
+    // Use innerText
     todolist.removeChild(e.target.parentElement);
   }
-  if ((e.target.innerHTML == "edit")) {
+  if (e.target.innerText === "edit") {
+    // Changed = to ===
+    edittodo = e.target.parentElement; // Store the li element
     inputbox.value = e.target.previousElementSibling.innerHTML;
-    // focus-place to the cursor in the input box
-
-    inputbox.focus();
+    inputbox.focus(); // focus-cursor redirect the input box
     addbtn.innerText = "edit";
-    edittodo = e;
-
   }
 };
 
+// Local Storage Helper Comments:
+// - saveLocaltodos: Stores a new todo in localStorage under the "todos" key.
+// - setItem: Saves the array of todos as a JSON string in localStorage.
+// - getItem: Retrieves the "todos" array from localStorage.
+// - JSON.parse: Converts the JSON string from localStorage back into an array.
+
+const saveLocaltodos = (todo) => {
+  let todos = [];
+  const storedTodos = localStorage.getItem("todos");
+  if (storedTodos !== null) {
+    todos = JSON.parse(storedTodos);
+  }
+  todos.push(todo);
+  localStorage.setItem("todos", JSON.stringify(todos));
+};
+
+//
+const getLocaltodo = () => {
+  const storedTodos = localStorage.getItem("todos");
+  if (storedTodos !== null) {
+    const todos = JSON.parse(storedTodos);
+    todos.forEach((todo) => {});
+  }
+};
+
+// delete the local storage
+let deletelocaltodos = () => {
+  if (storedTodos !== null) {
+    const todos = JSON.parse(storedTodos);
+  }
+};
+
+// DOMContentLoaded-is a brower event which are loaded and parsed
+document.addEventListener("DOMContentLoaded", getLocaltodo);
 addbtn.addEventListener("click", addtodo);
 todolist.addEventListener("click", updatetodo);
-
-

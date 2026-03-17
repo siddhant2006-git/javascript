@@ -24,7 +24,8 @@
 
         const xhr = new XMLHttpRequest();
         xhr.open("GET", requesturl, true);
-
+        
+// on load - which are load the document then show it 
         xhr.onload = function () {
           if (xhr.status === 200) {
             const data = JSON.parse(xhr.responseText);
