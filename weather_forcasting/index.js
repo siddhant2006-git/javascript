@@ -1,22 +1,22 @@
 const url =
-  "https://open-weather13.p.rapidapi.com/fivedaysforcast?latitude=40.730610&longitude=-73.935242&lang=EN";
+  "https://ai-powered-weather-forecasting3.p.rapidapi.com/weather.php?id=2172797&units=Imperial";
 const options = {
   method: "GET",
   headers: {
-    "API Key": "0c618a6833f8400891294946261703",
-    "x-rapidapi-host": "open-weather13.p.rapidapi.com",
+    "x-rapidapi-key": "5eff430feemsh25241c2ea7b3417p14c988jsnf789b547105b",
+    "x-rapidapi-host": "ai-powered-weather-forecasting3.p.rapidapi.com",
     "Content-Type": "application/json",
   },
 };
-async function wheathershow() {
+async function  displayweather() {
+  
+
   try {
     const response = await fetch(url, options);
-    const result = await response.json();
+    const result = await response.text();
     console.log(result);
   } catch (error) {
     console.error(error);
   }
- }
-wheathershow()
-
-
+}
+displayweather()
