@@ -3,28 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TO-DO app</title>
-<link rel="stylesheet" href="index.css">
-    
+  <title>Todo App</title>
+
+  <!-- Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="index.css">
 </head>
+
 <body>
-  <div class-="container">
+
+  <div class="container">
+    
+    <!-- Heading -->
+    <h2 style="margin-bottom: 6px;">My Tasks</h2>
+    <p style="margin-bottom: 20px; color: #6b7280; font-size: 14px;">
+      Stay organized and productive
+    </p>
+
+    <!-- Input Section -->
     <div class="input-container">
-      <h1>MY TO DO LIST APP</h1>
-      <input type="text" placeholder="add the new to do " id="inputbox">
-      <input type="button" value="add" id="addbtn">
+      <input 
+        type="text" 
+        placeholder="Add a new task..." 
+        id="inputbox"
+      >
+      <button id="addbtn">Add</button>
     </div>
 
-    <ul class ="todo" id="todolist">
-      <!-- <li>task1</li>
-    <li>task2</li>
-    <li>task3</li>
-  </ul> -->
-
+    <!-- Todo List -->
+    <ul id="todolist"></ul>
 
   </div>
-  
-</body>
-<script src="index.js"></script>
 
+  <script src="index.js"></script>
+</body>
 </html>
