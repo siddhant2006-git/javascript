@@ -56,6 +56,7 @@ const updatetodo = (e) => {
     edittodo = e.target.parentElement; // Store the li element
     inputbox.value = e.target.previousElementSibling.innerHTML;
     inputbox.focus(); // focus-cursor redirect the input box
+
     addbtn.innerText = "edit";
   }
 };
@@ -96,3 +97,8 @@ let deletelocaltodos = () => {
 document.addEventListener("DOMContentLoaded", getLocaltodo);
 addbtn.addEventListener("click", addtodo);
 todolist.addEventListener("click", updatetodo);
+
+
+
+
+

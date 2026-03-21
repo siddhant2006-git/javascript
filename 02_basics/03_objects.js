@@ -35,4 +35,5 @@ js_user.greetingtwo = function () {
 };
 
 console.log(js_user.greeting());
-console.log(js_user.greetingtwo()); //error 
+console.log(js_user.greetingtwo()); //error
+

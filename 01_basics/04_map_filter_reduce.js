@@ -26,3 +26,30 @@ console.log(charcount);
 const redu = [1, 2, 34, 43, 42];
 const allelements = redu.reduce((acc, num) => acc + num, 0);
 console.log(allelements);
+
+
+
+// foreach - value cannot be return
+
+const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
+const value = nums.filter((num) => {
+  return (num > 4 && num>6)
+})
+console.log(value)
+
+
+const books = [
+  { names: "siddhant", class: "XII", rollno: 12 },
+  {names:"kartik",class:"XI", rollno:10},
+{names:"sarthak",class:"XI", rollno:11}
+
+
+]
+// filter - it can show the data 
+// map - it can show the value in boolian login  true , false 
+
+const access = books.filter((item) => item.class === "XI")
+console.log(access)
+
+
