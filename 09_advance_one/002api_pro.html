@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>card</title>
+  </head>
+
+  <body>
+    <style>
+      body {
+        background-color: blueviolet;
+      }
+    </style>
+
+    <button class="avatar">SHOW AVATAR</button>
+
+    <script>
+      const requesturl = "https://api.github.com/users/siddhant2006-git";
+
+      const btn = document.querySelector(".avatar");
+
+      btn.addEventListener("click", function () {
+
+        const xhr = new XMLHttpRequest();
+        xhr.open("GET", requesturl, true);
+        
+// on load - which are load the document then show it 
+        xhr.onload = function () {
+          if (xhr.status === 200) {
+            const data = JSON.parse(xhr.responseText);
+            console.log(data.avatar_url);
+
+            const img = document.createElement("img");
+
+            img.src = data.avatar_url;
+
+            document.body.appendChild(img);
+
+
+            // console.log(typeof data)
+
+          
+          }
+        };
+        xhr.send();
+      });
+
+      // console.log(requesturl);
+      // open-  request for the url and method
+      // get-method used to retrieve the data (data can accept from the server )
+    </script>
+  </body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>closer</title>
+  </head>
+  <body>
+    <p>hello</p>
+    <button id="orange">orange</button>
+    <button id="green">green</button>
+  </body>
+  <script>
+    function display() {
+      let username = "siddhant bhatnagar";
+
+      function inner() {
+        let name = "siddhant";
+        console.log("inner", username);
+      }
+
+      function user() {
+        console.log("outer", username);
+      }
+      user();
+
+      inner();
+    }
+    display();
+    // console.log(username);
+  </script>
+
+  <script>
+    // document.getElementById("orange").addEventListener("click",function(){
+    //   document.body.style.backgroundColor="orange";
+    // })
+    // document.getElementById("green").addEventListener("click",function(){
+    //   document.body.style.backgroundColor="green"
+    // })
+
+    function clickHandler(color){
+      // document.body.style.backgroundColor=`${color}`
+       return function(){
+           document.body.style.backgroundColor=`${color}`
+       }
+    }
+      document.getElementById("orange").onclick=clickHandler("orange")
+      document.getElementById("green").onclick=clickHandler("green")    
+
+
+
+
+    
+  </script>
+</html>

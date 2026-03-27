@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <linK rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="card">
+    <img src="https://imgs.search.brave.com/7ui7UNapww_XQX78tTIsJ94w88sKG_XCzqSm1aUE8jg/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9tZWRp/YS5pc3RvY2twaG90/by5jb20vaWQvMTEw/MjcwNjYxL3Bob3Rv/L21vZGVsLWJlaW5n/LXBob3RvZ3JhcGhl/ZC1vbi1jYXR3YWxr/LWF0LWZhc2hpb24t/c2hvdy5qcGc_cz02/MTJ4NjEyJnc9MCZr/PTIwJmM9YnA5SWlB/LURlLUJRX1dvZV9r/ckR0SjREYk1vWEhS/aURLRW5hYnJEYXZl/MD0"
+    <h1>ANGLE PRIYA  </h1>
+    <h5>stranger</h5>
+
+    <div id="btn-container">
+      <button id="add">ADD FRIEND </button>
+      <button id="remove">remove </button>
+
+    </div>
+
+  </div>
+  <script>
+  var isstatus=  document.querySelector("h5")
+
+  let addfriend=document.querySelector("#add")
+  let check=0;
+
+  addfriend.addEventListener("click",function(){
+    if(check==0){
+    isstatus.innerHTML="friends"
+    isstatus.style.color="red"
+    console.log("hello my creater ")
+    check=2
+    }else{
+        isstatus.innerHTML="stranger"
+    isstatus.style.color="green"
+
+    }
+
+  })
+  // let removefriend=document.querySelector("#remove")
+
+  // removefriend.addEventListener("click" ,function(){
+  //   isstatus.innerHTML="removefriend"
+  //   isstatus.style.color="green"
+
+
+  // })
+
+  
+
+
+
+
+  </script>
+  
+</body>
+</html>

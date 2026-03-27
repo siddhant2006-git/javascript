@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo App</title>
+
+  <!-- Inter Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+
+  <div class="container">
+    
+    <!-- Heading -->
+    <h2 style="margin-bottom: 6px;">My Tasks</h2>
+    <p style="margin-bottom: 20px; color: #6b7280; font-size: 14px;">
+      Stay organized and productive
+    </p>
+
+    <!-- Input Section -->
+    <div class="input-container">
+      <input 
+        type="text" 
+        placeholder="Add a new task..." 
+        id="inputbox"
+      >
+      <button id="addbtn">Add</button>
+    </div>
+
+    <!-- Todo List -->
+    <ul id="todolist"></ul>
+
+  </div>
+
+  <script src="index.js"></script>
+</body>
+</html>

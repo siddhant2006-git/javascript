@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Markdown Notes App</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="index.css" />
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <h1>Markdown Notes</h1>
+
+    <div>
+      <button id="newNote">New</button>
+      <button id="deleteNote">Delete</button>
+      <button id="download">Download</button>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main>
+
+    <!-- SIDEBAR -->
+    <aside>
+      <h3>Notes</h3>
+      <ul id="notesList"></ul>
+    </aside>
+
+    <!-- EDITOR + PREVIEW -->
+    <section class="editor-container">
+      <textarea 
+        id="editor" 
+        placeholder="Write your markdown here..."
+      ></textarea>-
+
+      <div id="preview"></div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <span id="status">Auto-saved</span>
+  </footer>
+
+  <!-- JS -->
+  <script src="script.js"></script>
+
+</body>
+</html>

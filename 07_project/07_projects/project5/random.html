@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Guess the Number</title>
+  <style>
+    body { font-family: Arial; }
+    .resultParas { margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <h1>Guess the Number</h1>
+
+  <p>Try and guess a number between 1 and 100</p>
+
+  <!-- User Input -->
+  <input type="number" id="guessField" placeholder="Enter your guess">
+  <button id="subt">Submit Guess</button>
+
+  <!-- Result / History Area -->
+  <div class="resultParas">
+    <p>Previous guesses: <span id="guesses"></span></p>
+    <p>Remaining attempts: <span id="remaining">10</span></p>
+    <p class="lowOrHi"></p>
+  </div>
+
+  <script src="hi.js"></script>
+</body>
+</html>

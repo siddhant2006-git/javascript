@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <body style="background-color: brown;">
+    0 UNSENT Client has been created. open() not called yet. 1 OPENED open() has
+    been called. 2 HEADERS_RECEIVED send() has been called, and headers and
+    status are available. 3 LOADING Downloading; responseText holds partial
+    data. 4 DONE The operation is complete.
+
+    <script>
+      const requesturl = "https://api.github.com/users/siddhant2006-git";
+
+      console.log(requesturl)
+
+
+      // open-  request for the url and method 
+      // get-method used to retrieve the data (data can accept from the server )
+
+      const xhr =new  XMLHttpRequest();
+      xhr.open("GET", requesturl);
+      console.log(xhr.readyState);
+          xhr.send(); 
+
+      // xhr send()-send the request to the server 
+  
+// onreadystatechange- is the AJAX request and receive the data 
+
+// readstate- it is the property of XMLhttprequest is check the reponse of the data from the sever 
+
+
+      xhr.onreadystatechange = function () {
+        console.log(xhr.readyState);
+
+        // parse var= which are use to the string to convert the json
+
+        if (xhr.readyState === 4) {
+          const data = JSON.parse(xhr.responseText);
+
+
+          console.log(typeof data);
+          console.log(data.avtar);
+
+          
+        }
+      };
+
+      xhr.send();
+
+      
+    </script>
+  </head>
+  <body></body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>krish with javascript</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <ul class="language">
+        <li>java with script</li>
+    </ul>
+</body>
+
+<script>
+    function addlanguage(language) {
+       const il= document.createElement("li");
+       il.innerHTML=`${language}`
+       document.querySelector(".language")
+      .appendChild(il)
+    }
+     addlanguage("python")
+     addlanguage("c++")
+
+     function addoptilanguage(language){
+       const il= document.createElement("li")
+       il.appendChild(document.createTextNode(language))
+       document.querySelector(".li").appendchild(li)
+
+       //edit
+       const secondlang=document.querySelector("li:nth-child(2)")
+       console.log(secondlang)
+       // innerhtml="mojo"
+      const newli= docuemnt.createElement("li")
+      newli.textContent="mojo"
+      secondlang.replacewith(newli)
+      console.log(secondlang);
+
+
+     }
+</script>
+</html>
