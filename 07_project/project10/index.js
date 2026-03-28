@@ -8,24 +8,6 @@ const editbutton = document.getElementById("editBtn");
 const preview = document.getElementById("preview");
 const formatbutton = document.querySelector(".toolbar");
 
-/* PARSER */
-function parsemardowns(text) {
-  return text
-    .replace(/^### (.*$)/gim, "<h3>$1</h3>")
-    .replace(/^## (.*$)/gim, "<h2>$1</h2>")
-    .replace(/^# (.*$)/gim, "<h1>$1</h1>")
-    .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>")
-    .replace(/\*(.*?)\*/gim, "<em>$1</em>")
-    .replace(/`(.*?)`/gim, "<code>$1</code>")
-    .replace(/\n/g, "<br>");
-}
-
-editorText.addEventListener("input", () => {
-  preview.innerHTML = parsemardowns(editorText.value);
-});
-
-preview.innerHTML = parsemardowns(editorText.value || "");
-
 // parse the value of text each
 function parsemardowns(text) {
   return text
@@ -60,6 +42,7 @@ function saveNotes() {
 savebutton.addEventListener("click", saveNotes);
 
 // load the previous data in window context
+//getitem-read the files 
 function load() {
   const raw = localStorage.getItem("notes_v1");
   if (!raw) return;
@@ -75,6 +58,7 @@ function load() {
 }
 load();
 
+//removeitem-delete the data 
 deletebutton.addEventListener("click", function () {
   localStorage.removeItem("notes_v1");
   editorText.value = "";
@@ -88,6 +72,7 @@ function editsbutton() {
   // IdleStatus - is typically a dom reference which are displace the current state (editing ,saving)
   // textContent-is dom property used to get and set plain text of html
 
+  // focus -cursor can direct from the input
   if (isediting) {
     editorText.focus();
     IdleStatus.textContent = "Editing Markdown";
@@ -102,11 +87,74 @@ function editsbutton() {
 }
 editbutton.addEventListener("click", editsbutton);
 
+function autoSave() {
+  saveNotes();
+  document.getElementById("status").innerText = "Saved...";
+}
+document.addEventListener("keydown", (e) => {
+  if (e.ctrlKey && e.key === "s") {
+    e.preventDefault();
+    saveNotes();
+  }
+});
 
-function autosave() {
+//blob(binary large object)-it is represent raw immutable data used to create download files
 
-  document.getElementById("status").innerText="saved"
+function exportNote() {
+  const blob = new Blob([editorText.value], { type: "text/" });
+  const link = document.createElement("a");
+
+  link.href = URL.createObjectURL(blob);
+  link.download = "note.md";
+  link.click()
+
 }
 
+exportbutton.addEventListener("click",exportNote)
 
 
+
+
+exportNote();
+function applyFormat(type) {
+  const start = editorText.selectionStart;
+  const end = editorText.selectionEnd;
+  const text = editorText.value;
+
+  let before = text.substring(0, start);
+  let selected = text.substring(start, end);
+  let after = text.substring(end);
+
+  // if nothing selected → use current word/line
+  if (!selected) selected = "";
+
+  switch (type) {
+    case "h1":
+      selected = "# " + selected;
+      break;
+    case "h2":
+      selected = "## " + selected;
+      break;
+    case "bold":
+      selected = `**${selected}**`;
+      break;
+    case "italic":
+      selected = `*${selected}*`;
+      break;
+    case "code":
+      selected = `\`${selected}\``;
+      break;
+  }
+
+  editorText.value = before + selected + after;
+
+  // move cursor
+  const cursor = start + selected.length;
+  editorText.setSelectionRange(cursor, cursor);
+
+  // update preview instantly
+  preview.innerHTML = parsemardowns(editorText.value);
+
+  // keep focus
+  editorText.focus();
+}
