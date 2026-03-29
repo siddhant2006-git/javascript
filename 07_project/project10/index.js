@@ -31,6 +31,7 @@ function newNote() {
   editorText.value = "";
 }
 
+
 newbutton.addEventListener("click", newNote);
 
 // savenotes
@@ -108,16 +109,16 @@ document.addEventListener("keydown", (e) => {
 //blob(binary large object)-it is represent raw immutable data used to create download files
 
 function exportNote() {
-  const blob = new Blob([editorText.value], { type: "text/pdf" });
+  const blob = new Blob([editorText.value], { type: "text/markdown" });
   const link = document.createElement("a");
 
   link.href = URL.createObjectURL(blob);
   link.download = "note.md";
-  link.click()
 
+  link.click(); // trigger download
 }
 
-exportbutton.addEventListener("click",exportNote)
+exportbutton.addEventListener("click", exportNote);
 
 
 
