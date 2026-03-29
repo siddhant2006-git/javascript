@@ -40,7 +40,7 @@ console.log("C", array);
 
 // splice
 // const rat = myarra.splice(1, 3);
-// console.log(1, 3);
+// console.log(1, 3); // 1,,2,3
 
 const marvel = ["thor", "krish", "spiderman"];
 const car = ["thar", " fortuner", "scropio"];
