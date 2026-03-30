@@ -56,3 +56,25 @@ console.log(typeof undefined);
 
 // true=1 or false=0
 //""=>false
+
+
+// stack (primitive data ), heap(non - primitive data )
+let myyotubename = "siddhant@!23"
+let myname = myyotubename;
+myyotubename="krish@122"
+
+console.log(myname) // siddhant@!23
+console.log(myyotubename) // krish@122
+
+let user = {
+  Emai: "userone",
+  upi: "1234567890xxxxx"
+}
+
+let anotheruser = user;
+user.Emai = "krish@12345678"
+console.log(user.Emai)// krish@12345678
+console.log(anotheruser)// krish@12345678
+
+
+
