@@ -24,6 +24,7 @@ console.log(myarra.includes(9));
 //indexof-which are use to show the index of array
 console.log(myarra.indexOf(2));
 
+//join - array convert into string combine seprately
 const newarra = myarra.join();
 
 //console.log(myarra);
@@ -51,6 +52,9 @@ console.log(marvel);
 console.log(marvel[3][1]);
 
 const arrays = [1, 2, 3, 4, 5, 6, [8, (9)[(10, 12)]]];
+
+
+// flat-nested array convert to single array 
 
 const realarray = arrays.flat(4);
 console.log(realarray);

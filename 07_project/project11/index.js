@@ -1,5 +1,5 @@
 const sitesinput = document.getElementById("site");
-const password = document.getElementById("password");
+const userpassword = document.getElementById("Password");
 const add = document.querySelector(".addbtn");
 const deletes = document.querySelector(".deletesite");
 const show = document.querySelector(".listbtn");
@@ -17,11 +17,12 @@ function loadaccount() {
 // save account to local storage 
 // jsonstringfy- java script object to change the json string 
 function saveAccount() {
-  localStorage.setitem("accounts", JSON.stringify("accounts"))
+  const inputdata = localStorage.setitem("accounts", JSON.stringify("accounts"))
+  console.log("save data")
 
 }
 
-// Render accounts list
+// Render accounts list 
 function renderAccount() {
   const account = loadaccount();
   accountlist.innerHTML = "";
@@ -34,7 +35,7 @@ function renderAccount() {
 
   accountforEach((acc, index) =>{
     const li = document.createElement("li");
-    li.textContent = `${acc.sitesinput} : ${acc.password}`;
+    li.textContent = `${acc.sitesinput} : ${acc.userpasswordpassword}`;
     accountlist.appendChild(li)
     
   })
@@ -43,9 +44,9 @@ function renderAccount() {
 // add account 
 add.addEventListener("click", function () {
   const site = sitesinput.value.trim().toUpperCase();
-  const passwords = password.value.trim()
+  const passwords = userpassword.value.trim()
   
-  if (!site || !password) {
+  if (!site || !userpassword) {
     alert("both field are required")
   }
   let accounts = loadaccount();
@@ -58,3 +59,14 @@ add.addEventListener("click", function () {
   
  })
 
+// delete site
+
+deletes.addEventListener("clcick", function () {
+  inputdata.remove()
+
+
+
+  
+  
+})
+                                                   
