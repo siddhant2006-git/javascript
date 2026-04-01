@@ -3,70 +3,82 @@ const userpassword = document.getElementById("Password");
 const add = document.querySelector(".addbtn");
 const deletes = document.querySelector(".deletesite");
 const show = document.querySelector(".listbtn");
-const accountlist = document.getElementById("accountlist")
+const accountlist = document.getElementById("accountlist");
 
-// load account from local storage
-// Jsonparse-Json string convert to javascript object
-//getitem-use to read the storge
-
+// Load accounts
 function loadaccount() {
   const data = localStorage.getItem("accounts");
   return data ? JSON.parse(data) : [];
 }
 
-// save account to local storage 
-// jsonstringfy- java script object to change the json string 
-function saveAccount() {
-  const inputdata = localStorage.setitem("accounts", JSON.stringify("accounts"))
-  console.log("save data")
-
+// Save accounts
+function saveAccount(accounts) {
+  localStorage.setItem("accounts", JSON.stringify(accounts));
 }
 
-// Render accounts list 
+// Render accounts
 function renderAccount() {
-  const account = loadaccount();
+  const accounts = loadaccount();
   accountlist.innerHTML = "";
 
-  if (account.length === 0) {
-    accountlist.innerHTML = " <li>No accounts stored</li>"
+  if (accounts.length === 0) {
+    accountlist.innerHTML = "<li>No accounts stored</li>";
     return;
   }
-  // foreach-use to loopinfg array and perform an action for each element
 
-  accountforEach((acc, index) =>{
+  accounts.forEach((acc, index) => {
     const li = document.createElement("li");
-    li.textContent = `${acc.sitesinput} : ${acc.userpasswordpassword}`;
-    accountlist.appendChild(li)
-    
-  })
- }
+    li.textContent = `${acc.site} : ${acc.password}`;
 
-// add account 
+    // delete button
+    const btn = document.createElement("button");
+    btn.textContent = "Delete";
+    btn.onclick = () => deleteData(index);
+
+    li.appendChild(btn);
+    accountlist.appendChild(li);
+  });
+}
+
+// Add account
 add.addEventListener("click", function () {
   const site = sitesinput.value.trim().toUpperCase();
-  const passwords = userpassword.value.trim()
-  
-  if (!site || !userpassword) {
-    alert("both field are required")
+  const password = userpassword.value.trim();
+
+  if (!site || !password) {
+    alert("Both fields are required");
+    return;
   }
+
   let accounts = loadaccount();
-  
-  //prevent duplicate
-  if (accounts.some(acc => acc.site.toUpperCase() === site.toUpperCase())) {
-    alert("this sites already exist ")
+
+  // prevent duplicate
+  if (accounts.some((acc) => acc.site === site)) {
+    alert("This site already exists");
+    return;
   }
-    
-  
- })
 
-// delete site
+  // add new account
+  accounts.push({ site, password });
 
-deletes.addEventListener("clcick", function () {
-  inputdata.remove()
+  saveAccount(accounts);
+  renderAccount();
 
+  sitesinput.value = "";
+  userpassword.value = "";
+});
 
+// Delete account
+function deleteData(index) {
+  let accounts = loadaccount();
+  accounts.splice(index, 1);
 
-  
-  
-})
-                                                   
+  saveAccount(accounts);
+  renderAccount();
+}
+
+// Show button
+show.addEventListener("click", renderAccount);
+
+// Initial load
+renderAccount();
