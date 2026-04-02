@@ -1,4 +1,5 @@
 const editorText = document.getElementById("editor");
+console.log(editorText)
 const savebutton = document.getElementById("saveBtn");
 const deletebutton = document.getElementById("deleteBtn");
 const newbutton = document.getElementById("newBtn");
@@ -8,16 +9,17 @@ const editbutton = document.getElementById("editBtn");
 const preview = document.getElementById("preview");
 const formatbutton = document.querySelector(".toolbar");
 
-// parse the value of text each
+// parse- the value of text can convert into the html file
+//regEX termed -e(/`(.*?)`/gim
 function parsemardowns(text) {
   return text
     .replace(/^### (.*$)/gim, "<h3>$1</h3>")
     .replace(/^## (.*$)/gim, "<h2>$1</h2>")
     .replace(/^# (.*$)/gim, "<h1>$1</h1>")
-    .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>")
-    .replace(/\*(.*?)\*/gim, "<em>$1</em>")
-    .replace(/`(.*?)`/gim, "<code>$1</code>")
-    .replace(/\n/g, "<br>");
+    .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>") // strong tag-  which are used to the import text (text to highlight(Bold))
+    .replace(/\*(.*?)\*/gim, "<em>$1</em>")  // em tag -which are used to display the data from italic form 
+    .replace(/`(.*?)`/gim, "<code>$1</code>") // code - to display the code inside(monospace) the html
+    .replace(/\n/g, "<br>"); // br-to change the another line 
 }
 
 editorText.addEventListener("input", () => {
@@ -30,18 +32,16 @@ preview.innerHTML = parsemardowns(editorText.value || "");
 function newNote() {
   editorText.value = "";
 }
-
-
 newbutton.addEventListener("click", newNote);
 
 // savenotes
 // Json.stringfy - object and array convert into the json formate
-// setitem - read the data
+// setitem - it store the data form in localstorege from brower 
 function saveNotes() {
-  const text = editorText.value;
+  // const text = editorText.value;
 
   const data = {
-    content: text,
+    content: editorText.value,
     updatedAt: Date.now(),
   };
   console.log("saving", data);
@@ -52,7 +52,7 @@ savebutton.addEventListener("click", saveNotes);
 // load the previous data in window context
 //getitem-read the files 
 function load() {
-  const raw = localStorage.getItem("notes_v1");
+  const raw = localStorage.getItem("notes_v1"); // getitem - it is use to retrive the data and display the data 
   if (!raw) return;
 
   try {
@@ -95,6 +95,7 @@ function editsbutton() {
 }
 editbutton.addEventListener("click", editsbutton);
 
+// autosave \+74-85
 function autoSave() {
   saveNotes();
   document.getElementById("status").innerText = "Saved...";
@@ -109,7 +110,7 @@ document.addEventListener("keydown", (e) => {
 //blob(binary large object)-it is represent raw immutable data used to create download files
 
 function exportNote() {
-  const blob = new Blob([editorText.value], { type: "text/markdown" });
+  const blob = new Blob([editorText.value], { type: "text/plain" });
   const link = document.createElement("a");
 
   link.href = URL.createObjectURL(blob);
@@ -120,10 +121,6 @@ function exportNote() {
 
 exportbutton.addEventListener("click", exportNote);
 
-
-
-
-exportNote();
 function applyFormat(type) {
   const start = editorText.selectionStart;
   const end = editorText.selectionEnd;
@@ -166,3 +163,4 @@ function applyFormat(type) {
   // keep focus
   editorText.focus();
 }
+
