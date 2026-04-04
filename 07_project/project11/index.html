@@ -1,42 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Password Manager</title>
-  <link rel="stylesheet" href="index.css" >
+  <link rel="stylesheet" href="index.css"/>
 </head>
+
 <body>
 
+  <main class="container">
+    <h1>Password Manager</h1>
 
-  <h1>Password Manager</h1>
+    <!-- Add Account -->
+    <section>
+      <h2>Add Account</h2>
 
-  // add data
-  <h2>Add account </h2>
+      <label for="site">Website</label>
+      <input type="text" id="site" placeholder="Enter website"/>
 
-  <input type="text" id="site" placeholder="Websites">
-  <input type="text" id="Password" placeholder="Password">
+      <label for="password">Password</label>
+      <input type="text" id="password" placeholder="Enter password"/>
 
-  <div>
-    <button class="addbtn">Add</button>
-    <button class="listbtn">show all</button>
-  </div>
-  
+      <div class="actions">
+        <button id="addBtn">Add</button>
+        <button id="showBtn">Show All</button>
+      </div>
+    </section>
 
-  // delete 
-  <h2>Delete account </h2>
-  <input type="text" id="deletesite" placeholder="Enter the delete websites ">
-  <button class="deletebtn">delete</button>
+    <!-- Delete Account -->
+    <section>
+      <h2>Delete Account</h2>
 
-  // display data 
-  <h2>stored account </h2>
+      <label for="deleteSite">Website</label>
+      <input type="text" id="deleteSite" placeholder="Enter website to delete"/>
 
-  <ul id="accountlist"></ul>
+      <button id="deleteBtn">Delete</button>
+    </section>
 
+    <!-- Display Accounts -->
+    <section>
+      <h2>Stored Accounts</h2>
+      <ul id="accountList"></ul>
+    </section>
+  </main>
 
-
-<script src="index.js"></script>
-
+  <script src="index.js"></script>
 </body>
-
 </html>

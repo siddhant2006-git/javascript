@@ -1,84 +1,114 @@
-const sitesinput = document.getElementById("site");
-const userpassword = document.getElementById("Password");
-const add = document.querySelector(".addbtn");
-const deletes = document.querySelector(".deletesite");
-const show = document.querySelector(".listbtn");
-const accountlist = document.getElementById("accountlist");
 
-// Load accounts
-function loadaccount() {
-  const data = localStorage.getItem("accounts");
-  return data ? JSON.parse(data) : [];
+const siteInput = document.getElementById("site");
+const passwordInput = document.getElementById("password");
+const deleteInput = document.getElementById("deleteSite");
+
+const addBtn = document.getElementById("addBtn");
+const showBtn = document.getElementById("showBtn");
+const deleteBtn = document.getElementById("deleteBtn");
+
+const accountList = document.getElementById("accountList");
+
+function loadAccounts() {
+  return JSON.parse(localStorage.getItem("accounts")) || [];
 }
 
-// Save accounts
-function saveAccount(accounts) {
+// save data
+// set item -set the data 
+// Json.stringfy-object convert into json 
+function saveAccounts(accounts) {
   localStorage.setItem("accounts", JSON.stringify(accounts));
 }
 
-// Render accounts
-function renderAccount() {
-  const accounts = loadaccount();
-  accountlist.innerHTML = "";
+// display account 
+function displayAccounts() {
+  const accounts = loadAccounts();
+  accountList.innerHTML = "";
 
   if (accounts.length === 0) {
-    accountlist.innerHTML = "<li>No accounts stored</li>";
+    accountList.innerHTML = "<li>No accounts stored</li>";
     return;
   }
 
+  // for each 
   accounts.forEach((acc, index) => {
     const li = document.createElement("li");
-    li.textContent = `${acc.site} : ${acc.password}`;
 
-    // delete button
-    const btn = document.createElement("button");
-    btn.textContent = "Delete";
-    btn.onclick = () => deleteData(index);
+    const text = document.createElement("span");
+    text.textContent = `${acc.site} : ${acc.password}`;
 
-    li.appendChild(btn);
-    accountlist.appendChild(li);
+    const delBtn = document.createElement("button");
+    delBtn.textContent = "";
+
+    delBtn.addEventListener("click", () => {
+      deleteByIndex(index);
+    });
+
+    li.appendChild(text);
+    li.appendChild(delBtn);
+    accountList.appendChild(li);
   });
 }
 
-// Add account
-add.addEventListener("click", function () {
-  const site = sitesinput.value.trim().toUpperCase();
-  const password = userpassword.value.trim();
+/* =========================
+   Add Account
+========================= */
+addBtn.addEventListener("click", () => {
+  const site = siteInput.value.trim();
+  const password = passwordInput.value.trim();
 
   if (!site || !password) {
-    alert("Both fields are required");
+    alert("Both fields required");
     return;
   }
 
-  let accounts = loadaccount();
+  const accounts = loadAccounts();
 
   // prevent duplicate
-  if (accounts.some((acc) => acc.site === site)) {
-    alert("This site already exists");
+  if (accounts.some(acc => acc.site.toLowerCase() === site.toLowerCase())) {
+    alert("Site already exists");
     return;
   }
 
-  // add new account
   accounts.push({ site, password });
+  saveAccounts(accounts);
 
-  saveAccount(accounts);
-  renderAccount();
+  siteInput.value = "";
+  passwordInput.value = "";
 
-  sitesinput.value = "";
-  userpassword.value = "";
+  displayAccounts();
 });
 
-// Delete account
-function deleteData(index) {
-  let accounts = loadaccount();
+/* =========================
+   Delete by Site Name
+========================= */
+deleteBtn.addEventListener("click", () => {
+  const siteToDelete = deleteInput.value.trim().toLowerCase();
+
+  if (!siteToDelete) {
+    alert("Enter site to delete");
+    return;
+  }
+
+  let accounts = loadAccounts();
+  const filtered = accounts.filter(
+    acc => acc.site.toLowerCase() !== siteToDelete
+  );
+
+  if (accounts.length === filtered.length) {
+    alert("Site not found");
+    return;
+  }
+
+  saveAccounts(filtered);
+  deleteInput.value = "";
+  displayAccounts();
+});
+function deleteByIndex(index) {
+  let accounts = loadAccounts();
   accounts.splice(index, 1);
-
-  saveAccount(accounts);
-  renderAccount();
+  saveAccounts(accounts);
+  displayAccounts();
 }
-
-// Show button
-show.addEventListener("click", renderAccount);
-
-// Initial load
-renderAccount();
+showBtn.addEventListener("click", displayAccounts);
+window.addEventListener("DOMContentLoaded", displayAccounts);

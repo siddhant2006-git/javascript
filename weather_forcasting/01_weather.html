@@ -2,26 +2,31 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Weather Forecast</title>
+  <title>Upload Preview App</title>
+  <link rel="stylesheet" href="index.css">
 </head>
-<link rel="stylesheet" href="index.css">
 <body>
 
-  <h1>Weather Forecast</h1>
+  <div class="container">
+    <h2>Image Upload</h2>
 
-  <!-- Search Section -->
-  <input type="text" placeholder="Enter city">
-  <button>Search</button>
+    <input type="file" id="fileInput" accept="image/*">
 
-  <hr>
+    <div class="preview-box">
+      <img id="preview" />
+    </div>
 
-  <!-- Weather Display (Static Example) -->
-  <h2>Delhi</h2>
-  <p>Temperature: 30°C</p>
-  <p>Condition: Sunny</p>
-  <p>Humidity: 40%</p>
-  <p>Wind Speed: 10 km/h</p>
+    <p id="fileInfo"></p>
 
-  <script src="index.js"></script>
+    <button id="uploadBtn">Upload</button>
+
+    <div class="progress">
+      <div id="progressBar"></div>
+    </div>
+
+    <p id="status"></p>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
