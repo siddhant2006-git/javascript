@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CipherX Advanced</title>
+  <link rel="stylesheet" href="index.css" />
+</head>
+<body>
+
+<div class="container">
+  <h1>CipherX Advanced 🔐</h1>
+
+  <textarea id="inputText" placeholder="Enter encrypted text..."></textarea>
+
+  <div class="controls">
+    <label>Algorithm:</label>
+    <select id="algorithm">
+      <option value="all">All</option>
+      <option value="caesar">Caesar</option>
+      <option value="atbash">Atbash</option>
+      <option value="reverse">Reverse</option>
+      <option value="progressive">Progressive</option>
+    </select>
+
+    <label>Min Score:</label>
+    <input type="number" id="minScore" value="0"/>
+
+    <label>Top Results:</label>
+    <input type="number" id="topN" value="5"/>
+  </div>
+
+  <button onclick="analyze()">Analyze</button>
+
+  <div id="bestResult" class="best"></div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Method</th>
+        <th>Shift</th>
+        <th>Output</th>
+        <th>Score</th>
+      </tr>
+    </thead>
+    <tbody id="results"></tbody>
+  </table>
+</div>
+
+<script src="index.js"></script>
+</body>
+</html>

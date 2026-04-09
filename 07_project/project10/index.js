@@ -1,5 +1,5 @@
 const editorText = document.getElementById("editor");
-console.log(editorText)
+console.log(editorText);
 const savebutton = document.getElementById("saveBtn");
 const deletebutton = document.getElementById("deleteBtn");
 const newbutton = document.getElementById("newBtn");
@@ -8,6 +8,7 @@ const IdleStatus = document.getElementById("status");
 const editbutton = document.getElementById("editBtn");
 const preview = document.getElementById("preview");
 const formatbutton = document.querySelector(".toolbar");
+const sharebutton = document.getElementById("shareBtn");
 
 // parse- the value of text can convert into the html file
 //regEX termed -e(/`(.*?)`/gim
@@ -17,9 +18,9 @@ function parsemardowns(text) {
     .replace(/^## (.*$)/gim, "<h2>$1</h2>")
     .replace(/^# (.*$)/gim, "<h1>$1</h1>")
     .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>") // strong tag-  which are used to the import text (text to highlight(Bold))
-    .replace(/\*(.*?)\*/gim, "<em>$1</em>")  // em tag -which are used to display the data from italic form 
+    .replace(/\*(.*?)\*/gim, "<em>$1</em>") // em tag -which are used to display the data from italic form
     .replace(/`(.*?)`/gim, "<code>$1</code>") // code - to display the code inside(monospace) the html
-    .replace(/\n/g, "<br>"); // br-to change the another line 
+    .replace(/\n/g, "<br>"); // br-to change the another line
 }
 
 editorText.addEventListener("input", () => {
@@ -28,7 +29,6 @@ editorText.addEventListener("input", () => {
 
 preview.innerHTML = parsemardowns(editorText.value || "");
 
-
 function newNote() {
   editorText.value = "";
 }
@@ -36,7 +36,7 @@ newbutton.addEventListener("click", newNote);
 
 // savenotes
 // Json.stringfy - object and array convert into the json formate
-// setitem - it store the data form in localstorege from brower 
+// setitem - it store the data form in localstorege from brower
 function saveNotes() {
   // const text = editorText.value;
 
@@ -50,9 +50,9 @@ function saveNotes() {
 savebutton.addEventListener("click", saveNotes);
 
 // load the previous data in window context
-//getitem-read the files 
+//getitem-read the files
 function load() {
-  const raw = localStorage.getItem("notes_v1"); // getitem - it is use to retrive the data and display the data 
+  const raw = localStorage.getItem("notes_v1"); // getitem - it is use to retrive the data and display the data
   if (!raw) return;
 
   try {
@@ -66,7 +66,7 @@ function load() {
 }
 load();
 
-//removeitem-delete the data 
+//removeitem-delete the data
 deletebutton.addEventListener("click", function () {
   localStorage.removeItem("notes_v1");
   editorText.value = "";
@@ -164,3 +164,9 @@ function applyFormat(type) {
   editorText.focus();
 }
 
+function shareText() {
+  const texts = encodeURIComponent(editorText.value);
+  const url = `https://wa.me/?text=${texts}`;
+  window.open(url, "_blank");
+}
+sharebutton.addEventListener("click", shareText)

@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CollabDash — Real-Time Collaborative Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,300&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --ink: #0e0f11;
+  --ink2: #1a1c20;
+  --ink3: #252830;
+  --surface: #f5f3ef;
+  --surface2: #eceae4;
+  --surface3: #e2dfd7;
+  --text: #0e0f11;
+  --text2: #4a4d56;
+  --text3: #888b96;
+  --accent: #e85d2f;
+  --accent2: #f2a649;
+  --blue: #2d6be4;
+  --green: #1fa060;
+  --teal: #1a8a7d;
+  --purple: #6e42ca;
+  --border: rgba(14,15,17,0.1);
+  --border2: rgba(14,15,17,0.06);
+  --shadow: 0 1px 3px rgba(14,15,17,0.08), 0 4px 16px rgba(14,15,17,0.04);
+  --shadow-lg: 0 8px 32px rgba(14,15,17,0.12), 0 2px 8px rgba(14,15,17,0.06);
+  --radius: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --font-head: 'Fraunces', serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--surface);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── TOPBAR ─── */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(245,243,239,0.92);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 0;
+  height: 56px;
+  padding: 0 20px;
+}
+.topbar-brand {
+  display: flex; align-items: center; gap: 10px;
+  font-family: var(--font-head);
+  font-size: 20px; font-weight: 700;
+  color: var(--text); letter-spacing: -0.5px;
+  margin-right: 24px;
+}
+.brand-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); display: inline-block; }
+.topbar-tabs {
+  display: flex; gap: 2px; flex: 1;
+}
+.tab-btn {
+  padding: 6px 14px; border-radius: 8px; border: none;
+  font-family: var(--font-body); font-size: 13px; font-weight: 500;
+  cursor: pointer; background: transparent; color: var(--text2);
+  transition: all 0.15s;
+}
+.tab-btn:hover { background: var(--surface2); color: var(--text); }
+.tab-btn.active { background: var(--ink); color: #fff; }
+
+.topbar-actions { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+
+.presence-bar { display: flex; align-items: center; gap: -6px; }
+.avatar {
+  width: 30px; height: 30px; border-radius: 50%;
+  border: 2px solid var(--surface);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; color: #fff;
+  margin-left: -8px; position: relative; cursor: pointer;
+  transition: transform 0.2s;
+}
+.avatar:first-child { margin-left: 0; }
+.avatar:hover { transform: translateY(-2px); z-index: 10; }
+.avatar.a1 { background: #2d6be4; }
+.avatar.a2 { background: #e85d2f; }
+.avatar.a3 { background: #1fa060; }
+.avatar.a4 { background: #6e42ca; }
+.avatar.a5 { background: #1a8a7d; }
+
+.live-badge {
+  display: flex; align-items: center; gap: 5px;
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 20px; padding: 4px 10px;
+  font-size: 11px; font-weight: 500; color: var(--text2);
+}
+.live-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--green);
+  animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.8); }
+}
+
+.btn {
+  padding: 7px 14px; border-radius: 8px; border: none;
+  font-family: var(--font-body); font-size: 13px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s;
+}
+.btn-primary { background: var(--ink); color: #fff; }
+.btn-primary:hover { background: var(--ink2); }
+.btn-ghost { background: transparent; color: var(--text2); border: 1px solid var(--border); }
+.btn-ghost:hover { background: var(--surface2); color: var(--text); }
+.btn-accent { background: var(--accent); color: #fff; }
+.btn-accent:hover { opacity: 0.9; }
+
+/* ─── LAYOUT ─── */
+.app-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr 280px;
+  min-height: calc(100vh - 56px);
+}
+
+/* ─── LEFT SIDEBAR ─── */
+.sidebar-left {
+  border-right: 1px solid var(--border);
+  padding: 16px 12px;
+  background: rgba(245,243,239,0.5);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.sidebar-section-label {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--text3);
+  padding: 12px 8px 4px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 9px;
+  padding: 8px 10px; border-radius: 8px;
+  font-size: 13px; font-weight: 400; color: var(--text2);
+  cursor: pointer; transition: all 0.15s; border: none;
+  background: transparent; text-align: left; width: 100%;
+}
+.nav-item:hover { background: var(--surface2); color: var(--text); }
+.nav-item.active { background: var(--ink); color: #fff; }
+.nav-item.active .nav-icon { color: rgba(255,255,255,0.7); }
+.nav-icon { font-size: 14px; width: 16px; text-align: center; color: var(--text3); }
+.nav-badge {
+  margin-left: auto; background: var(--accent);
+  color: #fff; font-size: 10px; font-weight: 600;
+  padding: 1px 6px; border-radius: 10px;
+}
+.nav-badge.green { background: var(--green); }
+
+.widget-palette {
+  margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border);
+}
+.palette-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text3); padding: 0 8px 8px; }
+.widget-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.widget-tile {
+  padding: 10px 8px; border-radius: 8px;
+  background: var(--surface2); border: 1px solid var(--border);
+  font-size: 11px; font-weight: 500; color: var(--text2);
+  cursor: grab; text-align: center; transition: all 0.2s;
+  display: flex; flex-direction: column; gap: 4px; align-items: center;
+}
+.widget-tile:hover {
+  background: var(--ink); color: #fff; transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+.widget-tile-icon { font-size: 18px; }
+
+/* ─── MAIN CANVAS ─── */
+.main-canvas { background: var(--surface); padding: 20px; overflow-y: auto; }
+
+.canvas-header {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.canvas-title {
+  font-family: var(--font-head);
+  font-size: 26px; font-weight: 700; letter-spacing: -0.5px;
+  color: var(--text);
+}
+.canvas-subtitle { font-size: 13px; color: var(--text3); margin-top: 2px; }
+.canvas-actions { display: flex; gap: 8px; align-items: center; }
+
+/* Filter bar */
+.filter-bar {
+  display: flex; align-items: center; gap: 10px;
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 14px;
+  margin-bottom: 20px;
+}
+.filter-label { font-size: 12px; font-weight: 500; color: var(--text3); white-space: nowrap; }
+.filter-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+.chip {
+  padding: 4px 12px; border-radius: 20px;
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  transition: all 0.15s; border: 1px solid var(--border);
+  background: var(--surface2); color: var(--text2);
+}
+.chip.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+.chip:hover:not(.active) { background: var(--surface3); }
+.filter-sep { width: 1px; height: 20px; background: var(--border); }
+.filter-select {
+  border: none; background: transparent; font-family: var(--font-body);
+  font-size: 12px; color: var(--text2); cursor: pointer; outline: none;
+}
+
+/* Dashboard Grid */
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 14px;
+}
+.widget {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+  position: relative;
+  transition: box-shadow 0.2s, transform 0.2s;
+  overflow: hidden;
+}
+.widget:hover { box-shadow: var(--shadow-lg); }
+.widget.dragging { opacity: 0.5; transform: scale(0.98); }
+
+.widget-col-4 { grid-column: span 4; }
+.widget-col-6 { grid-column: span 6; }
+.widget-col-8 { grid-column: span 8; }
+.widget-col-12 { grid-column: span 12; }
+.widget-col-3 { grid-column: span 3; }
+
+/* Widget header */
+.widget-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.widget-title { font-size: 12px; font-weight: 600; color: var(--text3); text-transform: uppercase; letter-spacing: 0.06em; }
+.widget-menu { display: flex; gap: 4px; }
+.widget-menu-btn {
+  width: 24px; height: 24px; border-radius: 6px; border: none;
+  background: transparent; color: var(--text3); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; transition: all 0.15s;
+}
+.widget-menu-btn:hover { background: var(--surface2); color: var(--text); }
+
+/* Metric widgets */
+.metric-value {
+  font-family: var(--font-head);
+  font-size: 38px; font-weight: 700; letter-spacing: -1px;
+  color: var(--text); line-height: 1;
+}
+.metric-change {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 12px; font-weight: 500; padding: 2px 8px;
+  border-radius: 20px; margin-top: 6px;
+}
+.metric-change.up { background: #dcf5e9; color: #1a7d4a; }
+.metric-change.down { background: #fde8e6; color: #c0392b; }
+.metric-label { font-size: 12px; color: var(--text3); margin-top: 8px; }
+
+/* Sparkline */
+.sparkline-wrap { height: 40px; margin-top: 10px; }
+
+/* Collaboration overlay */
+.collab-cursor {
+  position: absolute; pointer-events: none; z-index: 50;
+  transition: all 0.1s linear;
+}
+.cursor-pointer {
+  width: 0; height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 12px solid var(--cursor-color);
+  transform: rotate(-30deg);
+}
+.cursor-label {
+  font-size: 10px; font-weight: 600; color: #fff;
+  background: var(--cursor-color);
+  padding: 2px 6px; border-radius: 4px;
+  margin-top: 2px; white-space: nowrap;
+}
+
+/* Activity pulse on widgets */
+.widget-activity-ring {
+  position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px;
+  border-radius: calc(var(--radius-lg) + 2px);
+  border: 2px solid transparent;
+  pointer-events: none;
+  transition: border-color 0.3s;
+}
+.widget:hover .widget-activity-ring { border-color: var(--accent); }
+.widget.active-collab .widget-activity-ring { border-color: var(--blue); animation: ring-pulse 2s infinite; }
+@keyframes ring-pulse {
+  0%, 100% { border-color: rgba(45,107,228,0.4); }
+  50% { border-color: rgba(45,107,228,0.9); }
+}
+
+/* Chart containers */
+.chart-wrap { position: relative; width: 100%; }
+
+/* Table widget */
+.data-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.data-table th {
+  padding: 8px 10px; text-align: left;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text3); border-bottom: 1px solid var(--border);
+}
+.data-table td {
+  padding: 10px 10px; color: var(--text2); border-bottom: 1px solid var(--border2);
+}
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: var(--surface); }
+.status-pill {
+  padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 600;
+}
+.status-pill.green { background: #dcf5e9; color: #1a7d4a; }
+.status-pill.amber { background: #fef3dc; color: #92690d; }
+.status-pill.red { background: #fde8e6; color: #c0392b; }
+.status-pill.blue { background: #e0eaff; color: #1a4ab5; }
+
+/* Gauge */
+.gauge-wrap {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+}
+.gauge-svg { width: 140px; height: 80px; }
+.gauge-val { font-family: var(--font-head); font-size: 28px; font-weight: 700; color: var(--text); }
+.gauge-sub { font-size: 11px; color: var(--text3); }
+
+/* Progress bars */
+.progress-list { display: flex; flex-direction: column; gap: 12px; margin-top: 4px; }
+.progress-item-label {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; color: var(--text2); margin-bottom: 5px; font-weight: 500;
+}
+.progress-track {
+  height: 6px; background: var(--surface2);
+  border-radius: 3px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; border-radius: 3px;
+  transition: width 1s cubic-bezier(.4,0,.2,1);
+}
+
+/* ─── RIGHT SIDEBAR ─── */
+.sidebar-right {
+  border-left: 1px solid var(--border);
+  background: rgba(245,243,239,0.5);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+.right-tab-bar {
+  display: flex; border-bottom: 1px solid var(--border);
+  background: transparent;
+}
+.right-tab {
+  flex: 1; padding: 12px 8px; border: none; background: transparent;
+  font-family: var(--font-body); font-size: 12px; font-weight: 500;
+  color: var(--text3); cursor: pointer; border-bottom: 2px solid transparent;
+  transition: all 0.15s;
+}
+.right-tab.active { color: var(--text); border-bottom-color: var(--accent); }
+.right-tab:hover { background: var(--surface2); color: var(--text); }
+
+.right-panel { flex: 1; overflow-y: auto; padding: 14px; }
+
+/* Activity Feed */
+.activity-feed { display: flex; flex-direction: column; gap: 1px; }
+.activity-item {
+  display: flex; gap: 10px; align-items: flex-start;
+  padding: 10px 8px; border-radius: 8px;
+  transition: background 0.15s; cursor: default;
+}
+.activity-item:hover { background: var(--surface2); }
+.activity-avatar-sm {
+  width: 26px; height: 26px; border-radius: 50%; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: #fff;
+}
+.activity-content { flex: 1; }
+.activity-text { font-size: 12px; color: var(--text2); line-height: 1.4; }
+.activity-text strong { color: var(--text); font-weight: 600; }
+.activity-time { font-size: 10px; color: var(--text3); margin-top: 2px; font-family: var(--font-mono); }
+.activity-type-dot { width: 6px; height: 6px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+
+/* Version History */
+.version-list { display: flex; flex-direction: column; gap: 2px; }
+.version-item {
+  padding: 10px 8px; border-radius: 8px; cursor: pointer;
+  border: 1px solid transparent; transition: all 0.15s;
+}
+.version-item:hover { background: var(--surface2); border-color: var(--border); }
+.version-item.current { background: #fff; border-color: var(--border); box-shadow: var(--shadow); }
+.version-hash { font-family: var(--font-mono); font-size: 10px; color: var(--blue); }
+.version-msg { font-size: 12px; color: var(--text2); margin: 3px 0; font-weight: 500; }
+.version-meta { font-size: 10px; color: var(--text3); display: flex; gap: 6px; align-items: center; }
+.version-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--text3); }
+
+/* RBAC Panel */
+.rbac-list { display: flex; flex-direction: column; gap: 8px; }
+.rbac-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px; background: #fff; border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.rbac-name { font-size: 12px; font-weight: 500; color: var(--text); flex: 1; }
+.rbac-role {
+  font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px;
+}
+.rbac-role.admin { background: #ede8ff; color: #5a2db5; }
+.rbac-role.editor { background: #e0eaff; color: #1a4ab5; }
+.rbac-role.viewer { background: var(--surface2); color: var(--text3); }
+.rbac-online { width: 7px; height: 7px; border-radius: 50%; background: var(--green); }
+.rbac-offline { width: 7px; height: 7px; border-radius: 50%; background: var(--surface3); }
+
+/* Drag-drop highlight */
+.drop-zone {
+  border: 2px dashed var(--border);
+  border-radius: var(--radius-lg);
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100px; color: var(--text3); font-size: 13px;
+  transition: all 0.2s; cursor: pointer;
+  grid-column: span 4;
+}
+.drop-zone:hover, .drop-zone.drag-over {
+  border-color: var(--accent); background: rgba(232,93,47,0.04); color: var(--accent);
+}
+
+/* Toast notifications */
+.toast-container {
+  position: fixed; bottom: 20px; right: 20px; z-index: 999;
+  display: flex; flex-direction: column; gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  background: var(--ink); color: #fff;
+  padding: 10px 16px; border-radius: 10px;
+  font-size: 13px; font-weight: 400;
+  display: flex; align-items: center; gap: 8px;
+  animation: toast-in 0.3s ease, toast-out 0.3s ease 2.7s forwards;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  pointer-events: auto;
+}
+.toast-icon { font-size: 14px; }
+@keyframes toast-in {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+@keyframes toast-out {
+  from { transform: translateY(0); opacity: 1; }
+  to { transform: translateY(-10px); opacity: 0; }
+}
+
+/* Data source badge */
+.datasource-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 500; color: var(--text3);
+  background: var(--surface2); border: 1px solid var(--border);
+  padding: 2px 8px; border-radius: 20px;
+}
+.datasource-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 10px; }
+
+/* Animations */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.widget { animation: fadeUp 0.4s ease backwards; }
+.widget:nth-child(1) { animation-delay: 0.05s; }
+.widget:nth-child(2) { animation-delay: 0.1s; }
+.widget:nth-child(3) { animation-delay: 0.15s; }
+.widget:nth-child(4) { animation-delay: 0.2s; }
+.widget:nth-child(5) { animation-delay: 0.25s; }
+.widget:nth-child(6) { animation-delay: 0.3s; }
+.widget:nth-child(7) { animation-delay: 0.35s; }
+.widget:nth-child(8) { animation-delay: 0.4s; }
+
+/* Tabs panel switching */
+.panel-section { display: none; }
+.panel-section.visible { display: block; }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="topbar-brand">
+    <span class="brand-dot"></span> CollabDash
+  </div>
+  <div class="topbar-tabs">
+    <button class="tab-btn active" onclick="switchTab(this,'main')">Q3 Revenue Overview</button>
+    <button class="tab-btn" onclick="switchTab(this,'ops')">Operations Monitor</button>
+    <button class="tab-btn" onclick="switchTab(this,'growth')">Growth Analytics</button>
+    <button class="tab-btn" onclick="switchTab(this,'new')" style="color:var(--accent);">+ New Dashboard</button>
+  </div>
+  <div class="topbar-actions">
+    <div class="live-badge">
+      <span class="live-dot"></span> Live
+    </div>
+    <div class="presence-bar" id="presenceBar">
+      <div class="avatar a1" title="Priya S — Editing">PS</div>
+      <div class="avatar a2" title="Rahul M — Viewing">RM</div>
+      <div class="avatar a3" title="Anika T — Editing">AT</div>
+      <div class="avatar a4" title="Dev K — Idle">DK</div>
+      <div class="avatar a5" title="Sana R — Viewing">SR</div>
+    </div>
+    <button class="btn btn-ghost" onclick="showVersionPanel()">⏱ History</button>
+    <button class="btn btn-primary" onclick="shareModal()">Share</button>
+    <button class="btn btn-accent" onclick="addWidget()">+ Widget</button>
+  </div>
+</header>
+
+<div class="app-layout">
+
+  <!-- LEFT SIDEBAR -->
+  <aside class="sidebar-left">
+    <div class="sidebar-section-label">Dashboards</div>
+    <button class="nav-item active"><span class="nav-icon">◈</span> Q3 Revenue <span class="nav-badge green">Live</span></button>
+    <button class="nav-item"><span class="nav-icon">◉</span> Operations</button>
+    <button class="nav-item"><span class="nav-icon">◈</span> Growth</button>
+    <button class="nav-item"><span class="nav-icon">◈</span> Customer Insights <span class="nav-badge">3</span></button>
+    <button class="nav-item"><span class="nav-icon">◉</span> Marketing ROI</button>
+
+    <div class="sidebar-section-label">Data Sources</div>
+    <button class="nav-item"><span class="nav-icon" style="color:var(--green);">●</span> PostgreSQL</button>
+    <button class="nav-item"><span class="nav-icon" style="color:var(--green);">●</span> Salesforce API</button>
+    <button class="nav-item"><span class="nav-icon" style="color:var(--amber2,#d29922);">●</span> Stripe Webhooks</button>
+    <button class="nav-item"><span class="nav-icon" style="color:var(--text3);">●</span> + Add Source</button>
+
+    <div class="widget-palette">
+      <div class="palette-label">Widget Library</div>
+      <div class="widget-grid">
+        <div class="widget-tile" draggable="true" ondragstart="dragStart(event,'metric')">
+          <span class="widget-tile-icon">📊</span> Metric
+        </div>
+        <div class="widget-tile" draggable="true" ondragstart="dragStart(event,'line')">
+          <span class="widget-tile-icon">📈</span> Line
+        </div>
+        <div class="widget-tile" draggable="true" ondragstart="dragStart(event,'bar')">
+          <span class="widget-tile-icon">📉</span> Bar
+        </div>
+        <div class="widget-tile" draggable="true" ondragstart="dragStart(event,'table')">
+          <span class="widget-tile-icon">🗂</span> Table
+        </div>
+        <div class="widget-tile" draggable="true" ondragstart="dragStart(event,'gauge')">
+          <span class="widget-tile-icon">🎯</span> Gauge
+        </div>
+        <div class="widget-tile" draggable="true" ondragstart="dragStart(event,'funnel')">
+          <span class="widget-tile-icon">🔻</span> Funnel
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CANVAS -->
+  <main class="main-canvas" id="mainCanvas"
+    ondragover="allowDrop(event)" ondrop="dropWidget(event)">
+
+    <div class="canvas-header">
+      <div>
+        <div class="canvas-title">Q3 Revenue Overview</div>
+        <div class="canvas-subtitle">Last updated 12 sec ago · Auto-refreshing · <span style="color:var(--accent)">3 users editing</span></div>
+      </div>
+      <div class="canvas-actions">
+        <span class="datasource-badge"><span class="datasource-dot"></span> PostgreSQL</span>
+        <span class="datasource-badge"><span class="datasource-dot"></span> Stripe</span>
+        <button class="btn btn-ghost" onclick="showToast('🔄','Dashboard refreshed')">Refresh</button>
+        <button class="btn btn-ghost" onclick="exportDash()">Export</button>
+      </div>
+    </div>
+
+    <!-- Filter bar -->
+    <div class="filter-bar">
+      <span class="filter-label">Period:</span>
+      <div class="filter-chips">
+        <span class="chip" onclick="setChip(this)">7D</span>
+        <span class="chip active" onclick="setChip(this)">30D</span>
+        <span class="chip" onclick="setChip(this)">Q3</span>
+        <span class="chip" onclick="setChip(this)">YTD</span>
+        <span class="chip" onclick="setChip(this)">Custom</span>
+      </div>
+      <div class="filter-sep"></div>
+      <span class="filter-label">Region:</span>
+      <div class="filter-chips">
+        <span class="chip active" onclick="setChip(this)">All</span>
+        <span class="chip" onclick="setChip(this)">APAC</span>
+        <span class="chip" onclick="setChip(this)">EMEA</span>
+        <span class="chip" onclick="setChip(this)">Americas</span>
+      </div>
+      <div class="filter-sep"></div>
+      <select class="filter-select" onchange="showToast('🔃','Filter applied')">
+        <option>All Products</option>
+        <option>Enterprise</option>
+        <option>SMB</option>
+        <option>Startup</option>
+      </select>
+    </div>
+
+    <!-- Dashboard Grid -->
+    <div class="dash-grid" id="dashGrid">
+
+      <!-- KPI 1 -->
+      <div class="widget widget-col-3" draggable="true">
+        <div class="widget-activity-ring"></div>
+        <div class="widget-head">
+          <span class="widget-title">Total Revenue</span>
+          <div class="widget-menu">
+            <button class="widget-menu-btn" title="Drill down" onclick="showToast('🔍','Drilling into Revenue')">⤢</button>
+            <button class="widget-menu-btn" title="More">⋯</button>
+          </div>
+        </div>
+        <div class="metric-value" id="rev1">₹4.82Cr</div>
+        <div><span class="metric-change up">↑ 18.4%</span></div>
+        <div class="metric-label">vs. last quarter</div>
+        <div class="sparkline-wrap"><canvas id="spark1"></canvas></div>
+      </div>
+
+      <!-- KPI 2 -->
+      <div class="widget widget-col-3">
+        <div class="widget-activity-ring"></div>
+        <div class="widget-head">
+          <span class="widget-title">Active Users</span>
+          <div class="widget-menu">
+            <button class="widget-menu-btn" onclick="showToast('🔍','Drilling into Users')">⤢</button>
+            <button class="widget-menu-btn">⋯</button>
+          </div>
+        </div>
+        <div class="metric-value">24,891</div>
+        <div><span class="metric-change up">↑ 9.2%</span></div>
+        <div class="metric-label">DAU this month</div>
+        <div class="sparkline-wrap"><canvas id="spark2"></canvas></div>
+      </div>
+
+      <!-- KPI 3 -->
+      <div class="widget widget-col-3 active-collab">
+        <div class="widget-activity-ring"></div>
+        <div class="widget-head">
+          <span class="widget-title">Churn Rate</span>
+          <div class="widget-menu">
+            <button class="widget-menu-btn" onclick="showToast('🔍','Drilling into Churn')">⤢</button>
+            <button class="widget-menu-btn">⋯</button>
+          </div>
+        </div>
+        <div class="metric-value">2.3%</div>
+        <div><span class="metric-change down">↑ 0.4%</span></div>
+        <div class="metric-label">Monthly churn · <span style="color:var(--blue);font-size:10px;">AT editing</span></div>
+        <div class="sparkline-wrap"><canvas id="spark3"></canvas></div>
+      </div>
+
+      <!-- KPI 4 -->
+      <div class="widget widget-col-3">
+        <div class="widget-activity-ring"></div>
+        <div class="widget-head">
+          <span class="widget-title">Avg. Deal Size</span>
+          <div class="widget-menu">
+            <button class="widget-menu-btn" onclick="showToast('🔍','Drilling into Deals')">⤢</button>
+            <button class="widget-menu-btn">⋯</button>
+          </div>
+        </div>
+        <div class="metric-value">₹1.4L</div>
+        <div><span class="metric-change up">↑ 22.7%</span></div>
+        <div class="metric-label">Enterprise segment</div>
+        <div class="sparkline-wrap"><canvas id="spark4"></canvas></div>
+      </div>
+
+      <!-- Revenue Trend Line -->
+      <div class="widget widget-col-8">
+        <div class="widget-activity-ring"></div>
+        <div class="widget-head">
+          <span class="widget-title">Revenue Trend</span>
+          <div style="display:flex;gap:6px;align-items:center;">
+            <span class="datasource-badge" style="font-size:9px;"><span class="datasource-dot"></span>Live</span>
+            <button class="widget-menu-btn" onclick="showToast('🔍','Switching to quarterly view')">⤢</button>
+            <button class="widget-menu-btn">⋯</button>
+          </div>
+        </div>
+        <div class="chart-wrap" style="height:200px;">
+          <canvas id="revenueChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Donut -->
+      <div class="widget widget-col-4">
+        <div class="widget-activity-ring"></div>
+        <div class="widget-head">
+          <span class="widget-title">Revenue by Segment</span>
+          <div class="widget-menu">
+            <button class="widget-menu-btn">⤢</button>
+            <button class="widget-menu-btn">⋯</button>
+          </div>
+        </div>
+        <div class="chart-wrap" style="height:160px;">
+          <canvas id="segChart"></canvas>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:5px;margin-top:10px;">
+          <div style="display:flex;justify-content:space-between;font-size:11px;">
+            <span style="display:flex;align-items:center;gap:5px;"><span style="width:8px;height:8px;border-radius:2px;background:#2d6be4;display:inline-block;"></span>Enterprise</span>
+            <span style="font-weight:600;color:var(--text);">52%</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;">
+            <span style="display:flex;align-items:center;gap:5px;"><span style="width:8px;height:8px;border-radius:2px;background:#e85d2f;display:inline-block;"></span>SMB</span>
+            <span style="font-weight:600;color:var(--text);">31%</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:11px;">
+            <span style="display:flex;align-items:center;gap:5px;"><span style="width:8px;height:8px;border-radius:2px;background:#1fa060;display:inline-block;"></span>Startup</span>
+            <span style="font-weight:600;color:var(--text);">17%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Regional Progress -->
+      <div class="widget widget-col-4">
+        <div class="widget-activity-ring"></div>
+        <div class="widget-head">
+          <span class="widget-title">Regional Targets</span>
+          <div class="widget-menu">
+            <button class="widget-menu-btn">⤢</button>
+            <button class="widget-menu-btn">⋯</button>
+          </div>
+        </div>
+        <div class="progress-list">
+          <div>
+            <div class="progress-item-label"><span>APAC</span><span style="color:var(--green);">84%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:84%;background:var(--green);"></div></div>
+          </div>
+          <div>
+            <div class="progress-item-label"><span>Americas</span><span style="color:var(--blue);">71%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:71%;background:var(--blue);"></div></div>
+          </div>
+          <div>
+            <div class="progress-item-label"><span>EMEA</span><span style="color:var(--amber2,#d29922);">58%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:58%;background:#d29922;"></div></div>
+          </div>
+          <div>
+            <div class="progress-item-label"><span>MEA</span><span style="color:var(--accent);">39%</span></div>
+            <div class="progress-track"><div class="progress-fill" style="width:39%;background:var(--accent);"></div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Gauge -->
+      <div class="widget widget-col-4" style="display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <div class="widget-head" style="width:100%;">
+          <span class="widget-title">NPS Score</span>
+          <div class="widget-menu">
+            <button class="widget-menu-btn">⤢</button>
+            <button class="widget-menu-btn">⋯</button>
+          </div>
+        </div>
+        <div class="gauge-wrap">
+          <svg class="gauge-svg" viewBox="0 0 140 80" fill="none">
+            <path d="M10 70 A60 60 0 0 1 130 70" stroke="#eceae4" stroke-width="14" stroke-linecap="round"/>
+            <path d="M10 70 A60 60 0 0 1 130 70" stroke="#2d6be4" stroke-width="14" stroke-linecap="round"
+              stroke-dasharray="188.5" stroke-dashoffset="52" style="transition:stroke-dashoffset 1s ease;"/>
+            <circle cx="70" cy="70" r="5" fill="#2d6be4"/>
+            <text x="70" y="60" text-anchor="middle" font-family="Fraunces,serif" font-size="22" font-weight="700" fill="#0e0f11">72</text>
+          </svg>
+          <div class="gauge-sub">Industry avg: 48 · <span style="color:var(--green);">Excellent</span></div>
+        </div>
+      </div>
+
+      <!-- Top Accounts Table -->
+      <div class="widget widget-col-8">
+        <div class="widget-activity-ring"></div>
+        <div class="widget-head">
+          <span class="widget-title">Top Accounts</span>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="text" placeholder="Search..." oninput="filterTable(this.value)"
+              style="font-family:var(--font-body);font-size:12px;padding:4px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface);color:var(--text);outline:none;width:140px;">
+            <button class="widget-menu-btn" onclick="showToast('📤','Exporting table...')">⤢</button>
+            <button class="widget-menu-btn">⋯</button>
+          </div>
+        </div>
+        <table class="data-table" id="accountTable">
+          <thead>
+            <tr>
+              <th onclick="sortTable(0)">Account ↕</th>
+              <th onclick="sortTable(1)">ARR ↕</th>
+              <th onclick="sortTable(2)">Growth</th>
+              <th>Stage</th>
+              <th>Health</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>Infosys Ltd.</strong></td><td>₹92L</td><td style="color:var(--green)">↑ 34%</td><td><span class="status-pill green">Enterprise</span></td><td><span class="status-pill green">Healthy</span></td></tr>
+            <tr><td><strong>Zomato</strong></td><td>₹67L</td><td style="color:var(--green)">↑ 21%</td><td><span class="status-pill blue">Growth</span></td><td><span class="status-pill green">Healthy</span></td></tr>
+            <tr><td><strong>Ola Electric</strong></td><td>₹54L</td><td style="color:var(--accent)">↓ 8%</td><td><span class="status-pill amber">SMB</span></td><td><span class="status-pill amber">At Risk</span></td></tr>
+            <tr><td><strong>Meesho</strong></td><td>₹48L</td><td style="color:var(--green)">↑ 44%</td><td><span class="status-pill blue">Startup</span></td><td><span class="status-pill green">Healthy</span></td></tr>
+            <tr><td><strong>BYJU'S</strong></td><td>₹31L</td><td style="color:var(--accent)">↓ 19%</td><td><span class="status-pill amber">SMB</span></td><td><span class="status-pill red">Churning</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Bar Chart -->
+      <div class="widget widget-col-4">
+        <div class="widget-head">
+          <span class="widget-title">Deals Closed / Mo</span>
+          <div class="widget-menu">
+            <button class="widget-menu-btn">⤢</button>
+            <button class="widget-menu-btn">⋯</button>
+          </div>
+        </div>
+        <div class="chart-wrap" style="height:170px;">
+          <canvas id="barChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Drop Zone -->
+      <div class="drop-zone widget-col-4" id="dropZone"
+        ondragover="allowDrop(event)" ondrop="dropWidget(event)"
+        ondragenter="this.classList.add('drag-over')" ondragleave="this.classList.remove('drag-over')"
+        onclick="addWidget()">
+        <span>⊕ Drop widget here</span>
+      </div>
+
+    </div>
+
+    <!-- Collab cursor simulation -->
+    <div class="collab-cursor" id="cursor1" style="--cursor-color:#e85d2f; left:200px; top:300px;">
+      <div class="cursor-pointer"></div>
+      <div class="cursor-label">Rahul</div>
+    </div>
+    <div class="collab-cursor" id="cursor2" style="--cursor-color:#1fa060; left:600px; top:450px;">
+      <div class="cursor-pointer"></div>
+      <div class="cursor-label">Anika</div>
+    </div>
+  </main>
+
+  <!-- RIGHT SIDEBAR -->
+  <aside class="sidebar-right">
+    <div class="right-tab-bar">
+      <button class="right-tab active" onclick="switchRightTab(this,'activity')">Activity</button>
+      <button class="right-tab" onclick="switchRightTab(this,'versions')">Versions</button>
+      <button class="right-tab" onclick="switchRightTab(this,'access')">Access</button>
+    </div>
+
+    <div class="right-panel">
+
+      <!-- Activity Feed -->
+      <div class="panel-section visible" id="panel-activity">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-weight:500;">5 collaborators active now</div>
+        <div class="activity-feed" id="activityFeed">
+          <div class="activity-item">
+            <div class="activity-avatar-sm" style="background:#e85d2f;">RM</div>
+            <div class="activity-content">
+              <div class="activity-text"><strong>Rahul</strong> added a filter for APAC region</div>
+              <div class="activity-time">just now</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-avatar-sm" style="background:#1fa060;">AT</div>
+            <div class="activity-content">
+              <div class="activity-text"><strong>Anika</strong> is editing the Churn Rate widget</div>
+              <div class="activity-time">1 min ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-avatar-sm" style="background:#2d6be4;">PS</div>
+            <div class="activity-content">
+              <div class="activity-text"><strong>Priya</strong> updated Revenue Trend data source</div>
+              <div class="activity-time">3 min ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-avatar-sm" style="background:#6e42ca;">DK</div>
+            <div class="activity-content">
+              <div class="activity-text"><strong>Dev</strong> rolled back to v2.3 then re-applied</div>
+              <div class="activity-time">7 min ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-avatar-sm" style="background:#1a8a7d;">SR</div>
+            <div class="activity-content">
+              <div class="activity-text"><strong>Sana</strong> exported Q3 data as CSV</div>
+              <div class="activity-time">12 min ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-avatar-sm" style="background:#e85d2f;">RM</div>
+            <div class="activity-content">
+              <div class="activity-text"><strong>Rahul</strong> added Top Accounts table widget</div>
+              <div class="activity-time">18 min ago</div>
+            </div>
+          </div>
+          <div class="activity-item">
+            <div class="activity-avatar-sm" style="background:#2d6be4;">PS</div>
+            <div class="activity-content">
+              <div class="activity-text"><strong>Priya</strong> connected Stripe Webhooks source</div>
+              <div class="activity-time">24 min ago</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Version History -->
+      <div class="panel-section" id="panel-versions">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-weight:500;">7 versions today</div>
+        <div class="version-list">
+          <div class="version-item current">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">
+              <span class="version-hash">v2.7 · a3f9c12</span>
+              <span style="font-size:10px;padding:2px 7px;background:#dcf5e9;color:#1a7d4a;border-radius:10px;font-weight:600;">Current</span>
+            </div>
+            <div class="version-msg">Added NPS gauge + APAC filter</div>
+            <div class="version-meta">Priya · <span class="version-dot"></span> 3 min ago</div>
+          </div>
+          <div class="version-item" onclick="rollback('v2.6')">
+            <span class="version-hash">v2.6 · b8e2d44</span>
+            <div class="version-msg">Revenue trend drill-down added</div>
+            <div class="version-meta">Rahul · <span class="version-dot"></span> 18 min ago</div>
+          </div>
+          <div class="version-item" onclick="rollback('v2.5')">
+            <span class="version-hash">v2.5 · c1d6f03</span>
+            <div class="version-msg">Stripe data source connected</div>
+            <div class="version-meta">Priya · <span class="version-dot"></span> 31 min ago</div>
+          </div>
+          <div class="version-item" onclick="rollback('v2.4')">
+            <span class="version-hash">v2.4 · d4a1e88</span>
+            <div class="version-msg">Top Accounts table widget</div>
+            <div class="version-meta">Dev · <span class="version-dot"></span> 45 min ago</div>
+          </div>
+          <div class="version-item" onclick="rollback('v2.3')">
+            <span class="version-hash">v2.3 · e7c9b21</span>
+            <div class="version-msg">Initial Q3 layout setup</div>
+            <div class="version-meta">Priya · <span class="version-dot"></span> 1 hr ago</div>
+          </div>
+          <div style="padding:12px 8px;text-align:center;">
+            <button class="btn btn-ghost" style="font-size:11px;width:100%;" onclick="showToast('📋','Comparing v2.6 vs v2.7...')">Compare versions</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Access Control -->
+      <div class="panel-section" id="panel-access">
+        <div style="font-size:11px;color:var(--text3);margin-bottom:10px;font-weight:500;">Role-based access control</div>
+        <div class="rbac-list">
+          <div class="rbac-item">
+            <div class="avatar a1" style="width:28px;height:28px;font-size:10px;margin:0;">PS</div>
+            <div style="flex:1;">
+              <div class="rbac-name">Priya Sharma</div>
+              <div style="font-size:10px;color:var(--text3);">priya@company.in</div>
+            </div>
+            <div class="rbac-role admin">Admin</div>
+            <div class="rbac-online" title="Online"></div>
+          </div>
+          <div class="rbac-item">
+            <div class="avatar a2" style="width:28px;height:28px;font-size:10px;margin:0;">RM</div>
+            <div style="flex:1;">
+              <div class="rbac-name">Rahul Mehta</div>
+              <div style="font-size:10px;color:var(--text3);">rahul@company.in</div>
+            </div>
+            <div class="rbac-role editor">Editor</div>
+            <div class="rbac-online" title="Online"></div>
+          </div>
+          <div class="rbac-item">
+            <div class="avatar a3" style="width:28px;height:28px;font-size:10px;margin:0;">AT</div>
+            <div style="flex:1;">
+              <div class="rbac-name">Anika Tiwari</div>
+              <div style="font-size:10px;color:var(--text3);">anika@company.in</div>
+            </div>
+            <div class="rbac-role editor">Editor</div>
+            <div class="rbac-online" title="Online"></div>
+          </div>
+          <div class="rbac-item">
+            <div class="avatar a4" style="width:28px;height:28px;font-size:10px;margin:0;">DK</div>
+            <div style="flex:1;">
+              <div class="rbac-name">Dev Kumar</div>
+              <div style="font-size:10px;color:var(--text3);">dev@company.in</div>
+            </div>
+            <div class="rbac-role viewer">Viewer</div>
+            <div class="rbac-offline" title="Idle"></div>
+          </div>
+          <div class="rbac-item">
+            <div class="avatar a5" style="width:28px;height:28px;font-size:10px;margin:0;">SR</div>
+            <div style="flex:1;">
+              <div class="rbac-name">Sana Raza</div>
+              <div style="font-size:10px;color:var(--text3);">sana@company.in</div>
+            </div>
+            <div class="rbac-role viewer">Viewer</div>
+            <div class="rbac-online" title="Online"></div>
+          </div>
+          <button class="btn btn-ghost" style="width:100%;font-size:12px;margin-top:6px;" onclick="showToast('✉️','Invite sent!')">+ Invite member</button>
+        </div>
+
+        <div style="margin-top:16px;padding:12px;background:#fff;border:1px solid var(--border);border-radius:10px;">
+          <div style="font-size:11px;font-weight:600;color:var(--text);margin-bottom:8px;">Security</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:11px;color:var(--text2);">
+            <div style="display:flex;justify-content:space-between;"><span>End-to-end encryption</span><span style="color:var(--green);font-weight:600;">ON</span></div>
+            <div style="display:flex;justify-content:space-between;"><span>Two-factor auth</span><span style="color:var(--green);font-weight:600;">Required</span></div>
+            <div style="display:flex;justify-content:space-between;"><span>Audit logging</span><span style="color:var(--green);font-weight:600;">Active</span></div>
+            <div style="display:flex;justify-content:space-between;"><span>IP allowlist</span><span style="color:var(--text3);">Disabled</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </aside>
+</div>
+
+<!-- Toast container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<script src="index.js"></script>
+
+
+</body>
+</html>
