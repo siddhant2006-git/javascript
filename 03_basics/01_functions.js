@@ -1,3 +1,11 @@
+// Function execution - when JavaScript runs a function, it goes through an execution process
+// There are two phases of execution:
+// 1. Memory Creation Phase - sets variables to undefined and stores function definitions
+// 2. Execution Phase - runs code line by line, assigns values, and stores results
+
+// function execution context- 1. global execution context working on  globally of function 
+// 2.function execution context - inside the work of function 
+
 function saymyname() {
   console.log("s");
   console.log("d");
