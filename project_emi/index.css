@@ -1,0 +1,111 @@
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* Background */
+body {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  color:#fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Main Container */
+body > div {
+  width: 90%;
+  max-width: 600px;
+  background: #1e293b;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+}
+
+/* Headings */
+h2, h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+/* Inputs */
+input {
+  width: 100%;
+  padding: 12px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 8px;
+  background: #334155;
+  color: white;
+  font-size: 14px;
+  outline: none;
+}
+
+/* Input focus effect */
+input:focus {
+  border: 1px solid #22c55e;
+}
+
+/* Button */
+button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: #22c55e;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Button hover */
+button:hover {
+  background: #16a34a;
+  transform: scale(1.03);
+}
+
+/* Lists */
+ul {
+  list-style: none;
+}
+
+/* List items */
+li {
+  background: #334155;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Profit / Loss */
+.profit {
+  color: #22c55e;
+}
+
+.loss {
+  color: #ef4444;
+}
+
+/* Smooth animation */
+li {
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

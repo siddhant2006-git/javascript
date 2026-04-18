@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finance Data</title>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <div>
+    <!-- Inputs -->
+    <input type="text" id="product" placeholder="Product name">
+    <input type="number" id="price" placeholder="Product price">
+    <input type="number" id="interest" placeholder="Interest rate">
+    <input type="number" id="month" placeholder="Months">
+
+    <!-- Buttons -->
+    <button onclick="calculate()" id="calculate">Calculate</button>
+    <button onclick="addProduct()">Add Product</button>
+  </div>
+
+  <!-- Extra Button -->
+  <button id="add">Add Detail</button>
+
+  <!--delete button-->
+  <button onclick="deleteProducts()">Delete All Products</button>
+  
+  <!-- Product List -->
+  <h2>Products</h2>
+  <ul id="productList"></ul>
+
+  <!-- Transaction List -->
+  <h3>-- Transactions --</h3>
+  <ul id="transactionList"></ul>
+
+  <script src="index.js"></script>
+
+</body>
+</html>
