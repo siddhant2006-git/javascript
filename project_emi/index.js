@@ -2,6 +2,7 @@ const productInput = document.getElementById("product");
 const priceInput = document.getElementById("price");
 const interestInput = document.getElementById("interest");
 const monthInput = document.getElementById("month");
+const imageInput = document.getElementById("image")
 
 const addBtn = document.getElementById("add");
 const calculateBtn = document.getElementById("calculate");
@@ -50,6 +51,7 @@ function addProduct() {
     interest: interestInput.value,
     month: monthInput.value,
     emi: emi,
+    imageInput:imageInput.value,
   };
 
   // Save data
@@ -85,3 +87,18 @@ function deleteProducts() {
   productList.innerHTML = "";
 }
 deleteBtn.addEventListener("click", deleteProducts);
+
+function autosave() {
+  saveToLocalStorage()
+}
+
+function getImageBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+}
