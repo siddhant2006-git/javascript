@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Markdown Notes App</title>
-
   <link rel="stylesheet" href="index.css" />
 </head>
 
@@ -20,46 +19,47 @@
       <button id="deleteBtn">Delete</button>
       <button id="exportBtn">Export</button>
       <button id="editBtn">Edit</button>
-      <button id="shareBtn">share</button>
+
+      <label for="shareSelect">Share</label>
+      <select id="shareSelect">
+        <option value="all">All</option>
+        <option value="email">Email</option>
+        <option value="whatsapp">WhatsApp</option>
+        <option value="instagram">Instagram</option>
+        <option value="twitter">Twitter</option>
+      </select>
     </div>
   </header>
 
-  <!-- MAIN LAYOUT -->
+  <!-- MAIN -->
   <main class="container">
 
-    <!-- SIDEBAR (MULTI NOTES) -->
+    <!-- SIDEBAR -->
     <aside class="sidebar">
       <h3>Notes</h3>
       <ul id="notesList"></ul>
     </aside>
 
-    <!-- EDITOR + PREVIEW -->
+    <!-- EDITOR -->
     <section class="editor-section">
 
       <!-- TOOLBAR -->
       <div class="toolbar">
-  
-  <button onclick="applyFormat('h1')">H1</button>
-  <button onclick="applyFormat('h2')">H2</button>
-  <button onclick="applyFormat('bold')">B</button>
-  <button onclick="applyFormat('italic')">I</button>
-  <button onclick="applyFormat('code')">Code</button>
-  <button onclick="applyFormat"('share')>share</button>
-</div>
+        <button data-format="h1">H1</button>
+        <button data-format="h2">H2</button>
+        <button data-format="bold">B</button>
+        <button data-format="italic">I</button>
+        <button data-format="code">Code</button>
+      </div>
 
       <!-- SPLIT VIEW -->
       <div class="split">
-
-        <!-- TEXTAREA -->
-      <!--<textarea> is used to create a multi-line text input field in HTML.-->  
         <textarea 
           id="editor" 
           placeholder="Write markdown here..."
         ></textarea>
 
-        <!-- PREVIEW -->
         <div id="preview"></div>
-
       </div>
 
       <!-- STATUS -->
@@ -68,8 +68,6 @@
     </section>
   </main>
 
-  <!-- SCRIPT -->
   <script src="index.js"></script>
-
 </body>
 </html>

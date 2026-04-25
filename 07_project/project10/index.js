@@ -1,105 +1,97 @@
-const editorText = document.getElementById("editor");
-console.log(editorText);
-const savebutton = document.getElementById("saveBtn");
-const deletebutton = document.getElementById("deleteBtn");
-const newbutton = document.getElementById("newBtn");
-const exportbutton = document.getElementById("exportBtn");
-const IdleStatus = document.getElementById("status");
-const editbutton = document.getElementById("editBtn");
-const preview = document.getElementById("preview");
-const formatbutton = document.querySelector(".toolbar");
-const sharebutton = document.getElementById("shareBtn");
 
-// parse- the value of text can convert into the html file
-//regEX termed -e(/`(.*?)`/gim
-function parsemardowns(text) {
+const editor = document.getElementById("editor");
+const preview = document.getElementById("preview");
+const status = document.getElementById("status");
+
+const btn = {
+  save: document.getElementById("saveBtn"),
+  del: document.getElementById("deleteBtn"),
+  new: document.getElementById("newBtn"),
+  export: document.getElementById("exportBtn"),
+  edit: document.getElementById("editBtn"),
+};
+
+const toolbar = document.querySelector(".toolbar");
+const shareSelect = document.getElementById("shareSelect");
+
+// MARKDOWN PARSER 
+function parseMarkdown(text) {
   return text
     .replace(/^### (.*$)/gim, "<h3>$1</h3>")
     .replace(/^## (.*$)/gim, "<h2>$1</h2>")
     .replace(/^# (.*$)/gim, "<h1>$1</h1>")
-    .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>") // strong tag-  which are used to the import text (text to highlight(Bold))
-    .replace(/\*(.*?)\*/gim, "<em>$1</em>") // em tag -which are used to display the data from italic form
-    .replace(/`(.*?)`/gim, "<code>$1</code>") // code - to display the code inside(monospace) the html
-    .replace(/\n/g, "<br>"); // br-to change the another line
+    .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>")
+    .replace(/\*(.*?)\*/gim, "<em>$1</em>")
+    .replace(/`(.*?)`/gim, "<code>$1</code>")
+    .replace(/\n/g, "<br>");
 }
 
-editorText.addEventListener("input", () => {
-  preview.innerHTML = parsemardowns(editorText.value);
+// LIVE PREVIEW 
+editor.addEventListener("input", () => {
+  preview.innerHTML = parseMarkdown(editor.value);
 });
 
-preview.innerHTML = parsemardowns(editorText.value || "");
+// NEW NOTE 
+btn.new.addEventListener("click", () => {
+  editor.value = "";
+  preview.innerHTML = "";
+});
 
-function newNote() {
-  editorText.value = "";
-}
-newbutton.addEventListener("click", newNote);
-
-// savenotes
-// Json.stringfy - object and array convert into the json formate
-// setitem - it store the data form in localstorege from brower
+// SAVE 
 function saveNotes() {
-  // const text = editorText.value;
-
   const data = {
-    content: editorText.value,
+    content: editor.value,
     updatedAt: Date.now(),
   };
-  console.log("saving", data);
-  localStorage.setItem("notes_v1", JSON.stringify(data));
-}
-savebutton.addEventListener("click", saveNotes);
 
-// load the previous data in window context
-//getitem-read the files
-function load() {
-  const raw = localStorage.getItem("notes_v1"); // getitem - it is use to retrive the data and display the data
+  localStorage.setItem("notes_v1", JSON.stringify(data));
+  status.textContent = "Saved";
+}
+
+btn.save.addEventListener("click", saveNotes);
+
+// LOAD
+function loadNotes() {
+  const raw = localStorage.getItem("notes_v1");
   if (!raw) return;
 
   try {
     const data = JSON.parse(raw);
-    editorText.value = data.content || "";
-
-    preview.innerHTML = parsemardowns(editorText.value);
-  } catch (e) {
-    console.log("corrupt data");
+    editor.value = data.content || "";
+    preview.innerHTML = parseMarkdown(editor.value);
+  } catch {
+    console.log("Corrupt data");
   }
 }
-load();
 
-//removeitem-delete the data
-deletebutton.addEventListener("click", function () {
+loadNotes();
+
+// DELETE - delete the text and element 
+btn.del.addEventListener("click", () => {
   localStorage.removeItem("notes_v1");
-  editorText.value = "";
+  editor.value = "";
   preview.innerHTML = "";
+  status.textContent = "Deleted";
 });
 
-let isediting = false;
-function editsbutton() {
-  isediting = !isediting;
+// EDIT MODE-edit the text
+let isEditing = false;
 
-  // IdleStatus - is typically a dom reference which are displace the current state (editing ,saving)
-  // textContent-is dom property used to get and set plain text of html
+btn.edit.addEventListener("click", () => {
+  isEditing = !isEditing;
 
-  // focus -cursor can direct from the input
-  if (isediting) {
-    editorText.focus();
-    IdleStatus.textContent = "Editing Markdown";
-    editbutton.textContent = "lock";
+  if (isEditing) {
+    editor.focus();
+    status.textContent = "Editing";
+    btn.edit.textContent = "Lock";
   } else {
-    IdleStatus.textContent = "view mode";
-    editbutton.textContent = "edit";
-
-    // autosave
+    status.textContent = "View Mode";
+    btn.edit.textContent = "Edit";
     saveNotes();
   }
-}
-editbutton.addEventListener("click", editsbutton);
+});
 
-// autosave \+74-85
-function autoSave() {
-  saveNotes();
-  document.getElementById("status").innerText = "Saved...";
-}
+//SHORTCUT SAVE
 document.addEventListener("keydown", (e) => {
   if (e.ctrlKey && e.key === "s") {
     e.preventDefault();
@@ -107,31 +99,30 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-//blob(binary large object)-it is represent raw immutable data used to create download files
-
-function exportNote() {
-  const blob = new Blob([editorText.value], { type: "text/plain" });
+// EXPORT
+btn.export.addEventListener("click", () => {
+  const blob = new Blob([editor.value], { type: "text/plain" });
   const link = document.createElement("a");
 
   link.href = URL.createObjectURL(blob);
   link.download = "note.md";
+  link.click();
+});
 
-  link.click(); // trigger download
-}
+toolbar.addEventListener("click", (e) => {
+  const type = e.target.dataset.format;
+  if (!type) return;
 
-exportbutton.addEventListener("click", exportNote);
+  applyFormat(type);
+});
 
 function applyFormat(type) {
-  const start = editorText.selectionStart;
-  const end = editorText.selectionEnd;
-  const text = editorText.value;
+  const start = editor.selectionStart;
+  const end = editor.selectionEnd;
 
-  let before = text.substring(0, start);
-  let selected = text.substring(start, end);
-  let after = text.substring(end);
-
-  // if nothing selected → use current word/line
-  if (!selected) selected = "";
+  let before = editor.value.substring(0, start);
+  let selected = editor.value.substring(start, end);
+  let after = editor.value.substring(end);
 
   switch (type) {
     case "h1":
@@ -151,22 +142,26 @@ function applyFormat(type) {
       break;
   }
 
-  editorText.value = before + selected + after;
+  editor.value = before + selected + after;
 
-  // move cursor
-  const cursor = start + selected.length;
-  editorText.setSelectionRange(cursor, cursor);
+  editor.setSelectionRange(start + selected.length, start + selected.length);
+  editor.focus();
 
-  // update preview instantly
-  preview.innerHTML = parsemardowns(editorText.value);
-
-  // keep focus
-  editorText.focus();
+  preview.innerHTML = parseMarkdown(editor.value);
 }
 
-function shareText() {
-  const texts = encodeURIComponent(editorText.value);
-  const url = `https://wa.me/?text=${texts}`;
-  window.open(url, "_blank");
-}
-sharebutton.addEventListener("click", shareText)
+shareSelect.addEventListener("change", (e) => {
+  const text = encodeURIComponent(editor.value);
+  const value = e.target.value;
+
+  const actions = {
+    whatsapp: () => window.open(`https://wa.me/?text=${text}`),
+    email: () => (window.location.href = `mailto:?body=${text}`),
+    twitter: () => window.open(`https://twitter.com/intent/tweet?text=${text}`),
+    instagram: () => 
+       window.open(`https://instagram.com/?text=${text}`)
+  
+  }
+
+  actions[value]?.();
+});
