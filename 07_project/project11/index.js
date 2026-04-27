@@ -50,9 +50,8 @@ function displayAccounts() {
   });
 }
 
-/* =========================
-   Add Account
-========================= */
+// add account 
+
 addBtn.addEventListener("click", () => {
   const site = siteInput.value.trim();
   const password = passwordInput.value.trim();

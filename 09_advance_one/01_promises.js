@@ -2,7 +2,7 @@
 // 1. pending form-intially state
 // 2. relsove form-operation complete fullfilled
 // 3. reject form - operation field
-// new -create the new object
+// new -create the new object 
 
 const promisesOne = new Promise(function (resolve, reject) {
   //promises-do an async task
@@ -94,6 +94,8 @@ async function consumepromiseFIve() {
   }
 }
 consumepromiseFIve();
+
+// await -is used to the pause the async function to resolve and reject 
 
 async function getallusers() {
   const response = await fetch("https://api.github.com/users/siddhant2006-git");
