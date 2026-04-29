@@ -1,11 +1,11 @@
 function price(val1, val2, ...num1) {
-  // ...=rest operator
+  // ...=rest operator-to collect the multiple value store in single arrayor object 
   return num1;
 }
 
 console.log(price(200, 300, 400));
 
-// object pass in function
+//object pass in function
 
 const user = {
   username: "siddhantbhatnagar",

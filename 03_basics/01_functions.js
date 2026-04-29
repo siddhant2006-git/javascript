@@ -13,6 +13,7 @@ function saymyname() {
   console.log("e");
 }
 
+
 saymyname();
 
 // (number1 or number line is parameters)

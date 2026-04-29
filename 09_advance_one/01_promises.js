@@ -1,7 +1,7 @@
 // promises- it works to probality of run the code
 // 1. pending form-intially state
 // 2. relsove form-operation complete fullfilled
-// 3. reject form - operation field
+// 3. reject form - operation failed 
 // new -create the new object 
 
 const promisesOne = new Promise(function (resolve, reject) {
@@ -80,11 +80,12 @@ const promiseFive = new Promise(function (resolve, reject) {
   }, 1000);
 });
 
-// async =function which atttend promise and wait the result without any blocking
+// async function =function which attend promise and wait the result without any blocking
 
 // awit=keyword which is used to wait for promise resolution
 
-//why try or catch use - it can throw the error from the await
+//why try or catch use - it can excute with run time but if and else can work on normal condition.
+
 async function consumepromiseFIve() {
   try {
     const response = await promiseFive;

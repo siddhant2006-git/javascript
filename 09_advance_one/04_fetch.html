@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AVTAR </title>
+</head>
+
+<body>
+  <style>
+    body{
+      background-color: yellow  ;
+    }
+  </style>
+
+  <button class="avatars">avtar</button>
+
+  
+</body>
+<script>
+
+    const btn=document.querySelector(".avatars")
+    btn.addEventListener("click", avtar)
+
+  async function avtar(){
+
+
+    try{
+        const requestUrl= await fetch("https://api.github.com/users/siddhant2006-git")
+
+
+    console.log(requestUrl)
+
+    if(!requestUrl.ok){
+      throw new Error("user is not found ")
+    }
+
+    const data=await requestUrl.json()
+    const avatar=document.createElement("img")
+    avatar.src=data.avatar_url;
+    avatar.width=150;
+
+  document.body.appendChild(avatar);
+
+
+
+
+    } catch(error){
+      console.log("error ")
+    }
+
+    
+  
+  }
+  
+  
+</script>
+</html>
