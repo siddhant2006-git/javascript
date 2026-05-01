@@ -36,3 +36,4 @@ async function climate() {
     console.error(error);
   }
 }
+
