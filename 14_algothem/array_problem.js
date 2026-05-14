@@ -1,22 +1,26 @@
 // bubble sort -it can swap the value for the adjacent element comparision 
 
-function bubbleSort(arr) {
+
+  const arr=[12,34,54,13,23,20]
   let n = arr.length;
 
-  for (let i = 0; i < n - 1; i++) {
-    for (let j = 0; j < n - i - 1; j++) {
-      if (arr[j] > arr[j + 1]) {
-        let temp = arr[j];
-        arr[j] = arr[j + 1];
-        arr[j + 1] = temp;
-      }
+  for (i = 0; i < n; i++){
+    for (j = 0; j < n - 1; j++){
+      if (arr[j] > arr[j+1]) {
+        let temp = arr[j]
+        arr[j] = arr[j + 1]
+        arr[j+1]=temp
+        
     }
-  }
-  return arr;
+
+    }
 }
+  console.log(arr)
+
+
 
 // Example
-console.log(bubbleSort([4, 2, 5, 1]));
+
 
 
 //  Selection Sort-find the smallest element in each and passat the correct postion
