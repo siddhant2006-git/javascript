@@ -26,3 +26,23 @@
 //  Selection Sort-find the smallest element in each and passat the correct postion
 
 
+const arra = [10, 20, 374, 373, 474, 335, 33];
+const p = arra.length;
+
+for (let i = 0; i < p - 1; i++) {
+  let minindex = i;
+
+  for (let j = i + 1; j < p; j++) {
+    if (arra[j] < arra[minindex]) {
+      minindex = j;
+    }
+  }
+
+  if (minindex !== i) {
+    [arra[i], arra[minindex]] = [arra[minindex], arra[i]];
+  }
+}
+
+console.log(arra);
+
+
