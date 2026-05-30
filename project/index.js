@@ -33,7 +33,7 @@ function score(text) {
   let s = 0;
   const t = text.toUpperCase();
 
-  KEYWORDS.forEach(w => { if (t.includes(w)) s += 15; });
+  KEYWORDS.forEach(w => { if (t.includes(w)) s += 16; });
   COMMON.forEach(w => { if (t.includes(w)) s += 3; });
 
   // frequency heuristic (vowels presence)
