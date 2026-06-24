@@ -14,20 +14,51 @@
     <h1>Markdown Notes</h1>
 
     <div class="actions">
+      <button id="themeToggle" class="theme-toggle">🌙</button>
       <button id="newBtn">New</button>
       <button id="saveBtn">Save</button>
       <button id="deleteBtn">Delete</button>
       <button id="exportBtn">Export</button>
       <button id="editBtn">Edit</button>
 
-      <label for="shareSelect">Share</label>
-      <select id="shareSelect">
-        <option value="all">All</option>
-        <option value="email">Email</option>
-        <option value="whatsapp">WhatsApp</option>
-        <option value="instagram">Instagram</option>
-        <option value="twitter">Twitter</option>
-      </select>
+      <div class="share">
+        <button id="shareBtn" class="share-btn" aria-haspopup="true" aria-expanded="false" title="Share">
+          <!-- Share SVG -->
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M16 6l-4-4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 2v13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <div id="shareMenu" class="share-menu" role="menu" aria-hidden="true">
+          <button class="share-item" data-action="whatsapp">
+            <!-- WhatsApp SVG -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M21 11.5a8.38 8.38 0 0 1-2.36 5.86L21 21l-3.69-1.15A8.5 8.5 0 1 1 21 11.5z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M17.5 14.5c-.4-.2-2.4-1.2-2.8-1.3-.3-.1-.5-.1-.7.2l-.5.8c-.2.3-.7.4-1 .2-1.1-.6-2-1.7-2.5-3-.1-.3 0-.6.2-.8l.7-.7c.2-.2.2-.5.1-.8-.1-.3-.8-1.9-1.1-2.5-.3-.6-.7-.6-1-.6-.2 0-.5 0-.8 0-.4 0-1 .1-1.5.7-.6.6-2 2.2-2 5.3 0 3.1 2.3 6 2.6 6.4.3.4 4 .8 5.5.8 1.5 0 4-.9 4.6-3.2.5-2.2.5-3.2.3-3.5-.2-.3-1.2-.6-1.6-.8z" stroke="currentColor" stroke-width="0"/></svg>
+            <span>WhatsApp</span>
+          </button>
+          <button class="share-item" data-action="facebook">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M18 2h-3a4 4 0 0 0-4 4v3H8v4h3v8h4v-8h3l1-4h-4V6a1 1 0 0 1 1-1h2V2z" stroke="currentColor" stroke-width="0"/></svg>
+            <span>Facebook</span>
+          </button>
+          <button class="share-item" data-action="twitter">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53A4.48 4.48 0 0 0 12 7.5v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z" stroke="currentColor" stroke-width="0"/></svg>
+            <span>Twitter</span>
+          </button>
+          <button class="share-item" data-action="linkedin">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-14h4v2a4 4 0 0 1 4-2zM2 9h4v14H2zM4 3a2 2 0 1 1 0 4 2 2 0 0 1 0-4z" stroke="currentColor" stroke-width="0"/></svg>
+            <span>LinkedIn</span>
+          </button>
+          <button class="share-item" data-action="email">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8l9 6 9-6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 6H3v12a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6z" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Email</span>
+          </button>
+          <button class="share-item" data-action="copy">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M5 15V5a2 2 0 0 1 2-2h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Copy Link</span>
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -50,6 +81,10 @@
         <button data-format="bold">B</button>
         <button data-format="italic">I</button>
         <button data-format="code">Code</button>
+        <button data-format="blockquote">Quote</button>
+        <button data-format="checkbox">☑ Check</button>
+        <button data-format="link">Link</button>
+        <button data-format="image">Image</button>
       </div>
 
       <!-- SPLIT VIEW -->

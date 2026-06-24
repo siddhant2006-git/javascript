@@ -1,6 +1,7 @@
 const editor = document.getElementById("editor");
 const preview = document.getElementById("preview");
 const status = document.getElementById("status");
+const themeToggle = document.getElementById("themeToggle");
 
 const btn = {
   save: document.getElementById("saveBtn"),
@@ -11,18 +12,60 @@ const btn = {
 };
 
 const toolbar = document.querySelector(".toolbar");
-const shareSelect = document.getElementById("shareSelect");
+const shareBtn = document.getElementById("shareBtn");
+const shareMenu = document.getElementById("shareMenu");
+
+// THEME TOGGLE
+function initTheme() {
+  const savedTheme = localStorage.getItem("theme") || "light";
+  document.body.classList.toggle("dark-mode", savedTheme === "dark");
+  updateThemeButton(savedTheme);
+}
+
+function updateThemeButton(theme) {
+  themeToggle.textContent = theme === "dark" ? "☀️" : "🌙";
+}
+
+themeToggle.addEventListener("click", () => {
+  const isDark = document.body.classList.toggle("dark-mode");
+  const theme = isDark ? "dark" : "light";
+  localStorage.setItem("theme", theme);
+  updateThemeButton(theme);
+});
+
+initTheme();
 
 // MARKDOWN PARSER
 function parseMarkdown(text) {
-  return text
-    .replace(/^### (.*$)/gim, "<h3>$1</h3>")
-    .replace(/^## (.*$)/gim, "<h2>$1</h2>")
-    .replace(/^# (.*$)/gim, "<h1>$1</h1>")
-    .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>")
-    .replace(/\*(.*?)\*/gim, "<em>$1</em>")
-    .replace(/`(.*?)`/gim, "<code>$1</code>")
-    .replace(/\n/g, "<br>");
+  return (
+    text
+      // Blockquotes
+      .replace(/^> (.*$)/gim, "<blockquote>$1</blockquote>")
+      // Checkboxes
+      .replace(
+        /^\- \[ \] (.*$)/gim,
+        '<label class="checkbox"><input type="checkbox"> $1</label>',
+      )
+      .replace(
+        /^\- \[x\] (.*$)/gim,
+        '<label class="checkbox"><input type="checkbox" checked> $1</label>',
+      )
+      // Images
+      .replace(/!\[(.*?)\]\((.*?)\)/gim, '<img src="$2" alt="$1">')
+      // Links
+      .replace(/\[(.*?)\]\((.*?)\)/gim, '<a href="$2" target="_blank">$1</a>')
+      // Headings
+      .replace(/^### (.*$)/gim, "<h3>$1</h3>")
+      .replace(/^## (.*$)/gim, "<h2>$1</h2>")
+      .replace(/^# (.*$)/gim, "<h1>$1</h1>")
+      // Bold & Italic
+      .replace(/\*\*(.*?)\*\*/gim, "<strong>$1</strong>")
+      .replace(/\*(.*?)\*/gim, "<em>$1</em>")
+      // Code
+      .replace(/`(.*?)`/gim, "<code>$1</code>")
+      // Line breaks
+      .replace(/\n/g, "<br>")
+  );
 }
 
 // LIVE PREVIEW
@@ -136,15 +179,41 @@ function applyFormat(type) {
       break;
     case "bold":
       selected = `**${selected}**`;
-      cursorOffset = hasSelection ? selected.length : 2; // Position cursor after ** if no selection
+      cursorOffset = hasSelection ? selected.length : 2;
       break;
     case "italic":
       selected = `*${selected.trim()}*`;
-      cursorOffset = hasSelection ? selected.length : 1; // Position cursor after * if no selection
+      cursorOffset = hasSelection ? selected.length : 1;
       break;
     case "code":
       selected = `\`${selected.trim()}\``;
-      cursorOffset = hasSelection ? selected.length : 1; // Position cursor after ` if no selection
+      cursorOffset = hasSelection ? selected.length : 1;
+      break;
+    case "blockquote":
+      selected = "> " + selected;
+      cursorOffset = selected.length;
+      break;
+    case "checkbox":
+      selected = "- [ ] " + selected;
+      cursorOffset = selected.length;
+      break;
+    case "link":
+      if (hasSelection) {
+        selected = `[${selected}](url)`;
+        cursorOffset = selected.length - 5;
+      } else {
+        selected = "[text](url)";
+        cursorOffset = 1;
+      }
+      break;
+    case "image":
+      if (hasSelection) {
+        selected = `![${selected}](image-url)`;
+        cursorOffset = selected.length - 12;
+      } else {
+        selected = "![alt](image-url)";
+        cursorOffset = 2;
+      }
       break;
   }
 
@@ -157,16 +226,65 @@ function applyFormat(type) {
   preview.innerHTML = parseMarkdown(editor.value);
 }
 
-shareSelect.addEventListener("change", (e) => {
-  const text = encodeURIComponent(editor.value);
-  const value = e.target.value;
-
-  const actions = {
-    whatsapp: () => window.open(`https://wa.me/?text=${text}`),
-    email: () => (window.location.href = `mailto:?body=${text}`),
-    twitter: () => window.open(`https://twitter.com/intent/tweet?text=${text}`),
-    instagram: () => window.open(`https://instagram.com/?text=${text}`),
+// SHARE DROPDOWN BEHAVIOR
+if (shareBtn && shareMenu) {
+  const openMenu = () => {
+    shareMenu.classList.add("open");
+    shareBtn.setAttribute("aria-expanded", "true");
+    shareMenu.setAttribute("aria-hidden", "false");
   };
 
-  actions[value]?.();
-});
+  const closeMenu = () => {
+    shareMenu.classList.remove("open");
+    shareBtn.setAttribute("aria-expanded", "false");
+    shareMenu.setAttribute("aria-hidden", "true");
+  };
+
+  shareBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (shareMenu.classList.contains("open")) closeMenu();
+    else openMenu();
+  });
+
+  // Click outside to close
+  document.addEventListener("click", (e) => {
+    if (!shareMenu.contains(e.target) && e.target !== shareBtn) closeMenu();
+  });
+
+  // Handle menu actions
+  shareMenu.addEventListener("click", (e) => {
+    const item = e.target.closest(".share-item");
+    if (!item) return;
+    const action = item.dataset.action;
+    const text = encodeURIComponent(editor.value || "");
+    const pageUrl = encodeURIComponent(window.location.href);
+
+    const actions = {
+      whatsapp: () => window.open(`https://wa.me/?text=${text}`),
+      facebook: () =>
+        window.open(
+          `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}&quote=${text}`,
+        ),
+      twitter: () =>
+        window.open(`https://twitter.com/intent/tweet?text=${text}`),
+      linkedin: () =>
+        window.open(
+          `https://www.linkedin.com/sharing/share-offsite/?url=${pageUrl}`,
+        ),
+      email: () => (window.location.href = `mailto:?body=${text}`),
+      copy: async () => {
+        try {
+          await navigator.clipboard.writeText(window.location.href);
+          status.textContent = "Link copied to clipboard";
+          setTimeout(() => (status.textContent = "Idle"), 2000);
+        } catch (err) {
+          status.textContent = "Copy failed";
+          setTimeout(() => (status.textContent = "Idle"), 2000);
+        }
+      },
+    };
+
+    actions[action]?.();
+    closeMenu();
+  });
+}
