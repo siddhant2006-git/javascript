@@ -1,4 +1,3 @@
-
 const editor = document.getElementById("editor");
 const preview = document.getElementById("preview");
 const status = document.getElementById("status");
@@ -14,7 +13,7 @@ const btn = {
 const toolbar = document.querySelector(".toolbar");
 const shareSelect = document.getElementById("shareSelect");
 
-// MARKDOWN PARSER 
+// MARKDOWN PARSER
 function parseMarkdown(text) {
   return text
     .replace(/^### (.*$)/gim, "<h3>$1</h3>")
@@ -26,18 +25,18 @@ function parseMarkdown(text) {
     .replace(/\n/g, "<br>");
 }
 
-// LIVE PREVIEW 
+// LIVE PREVIEW
 editor.addEventListener("input", () => {
   preview.innerHTML = parseMarkdown(editor.value);
 });
 
-// NEW NOTE 
+// NEW NOTE
 btn.new.addEventListener("click", () => {
   editor.value = "";
   preview.innerHTML = "";
 });
 
-// SAVE 
+// SAVE
 function saveNotes() {
   const data = {
     content: editor.value,
@@ -66,7 +65,7 @@ function loadNotes() {
 
 loadNotes();
 
-// DELETE - delete the text and element 
+// DELETE - delete the text and element
 btn.del.addEventListener("click", () => {
   localStorage.removeItem("notes_v1");
   editor.value = "";
@@ -119,32 +118,40 @@ toolbar.addEventListener("click", (e) => {
 function applyFormat(type) {
   const start = editor.selectionStart;
   const end = editor.selectionEnd;
+  const hasSelection = start !== end;
 
   let before = editor.value.substring(0, start);
   let selected = editor.value.substring(start, end);
   let after = editor.value.substring(end);
+  let cursorOffset = 0;
 
   switch (type) {
     case "h1":
       selected = "# " + selected;
+      cursorOffset = selected.length;
       break;
     case "h2":
       selected = "## " + selected;
+      cursorOffset = selected.length;
       break;
     case "bold":
       selected = `**${selected}**`;
+      cursorOffset = hasSelection ? selected.length : 2; // Position cursor after ** if no selection
       break;
     case "italic":
-      selected = `*${selected}*`;
+      selected = `*${selected.trim()}*`;
+      cursorOffset = hasSelection ? selected.length : 1; // Position cursor after * if no selection
       break;
     case "code":
-      selected = `\`${selected}\``;
+      selected = `\`${selected.trim()}\``;
+      cursorOffset = hasSelection ? selected.length : 1; // Position cursor after ` if no selection
       break;
   }
 
   editor.value = before + selected + after;
 
-  editor.setSelectionRange(start + selected.length, start + selected.length);
+  editor.setSelectionRange(start + cursorOffset, start + cursorOffset);
+
   editor.focus();
 
   preview.innerHTML = parseMarkdown(editor.value);
@@ -158,10 +165,8 @@ shareSelect.addEventListener("change", (e) => {
     whatsapp: () => window.open(`https://wa.me/?text=${text}`),
     email: () => (window.location.href = `mailto:?body=${text}`),
     twitter: () => window.open(`https://twitter.com/intent/tweet?text=${text}`),
-    instagram: () => 
-       window.open(`https://instagram.com/?text=${text}`)
-  
-  }
+    instagram: () => window.open(`https://instagram.com/?text=${text}`),
+  };
 
   actions[value]?.();
 });
