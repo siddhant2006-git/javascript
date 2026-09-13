@@ -6,11 +6,13 @@ function price(tax) {
     return function (c) {
       return tax + b + c;
       
+      
     }
   }
   
 }
 console.log(price(10)(20)(30));
+
 
 // real time 
 
@@ -21,6 +23,8 @@ const mupltiplyby10 = multiple(10)
 
 console.log(mupltiplyby10(10)(20))
 console.log(mupltiplyby10(30)(40));
+
+
 
 
 
