@@ -47,7 +47,7 @@ console.log(value)
 
 
 const books = [
-  { names: "siddhant", class: "XII", rollno: 12 },
+  { names: "siddhant bhatnagar", class: "XII", rollno: 12 },
   {names:"kartik",class:"XI", rollno:10},
 {names:"sarthak",class:"XI", rollno:11}
 ]
